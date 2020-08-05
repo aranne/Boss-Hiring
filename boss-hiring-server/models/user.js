@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const SALT_WORK_FACTOR = 10;
 
 const UserSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true}, // 用户名
+  username: { type: String, required: true, unique: true }, // 用户名
   password: { type: String, required: true }, // 密码
   type: { type: String, required: true }, // 用户类型: employer/employee
   avatar: { type: String, default: "" }, // 头像
@@ -31,24 +31,15 @@ const UserSchema = new mongoose.Schema({
 /**
  * Pre-hook:   Encrypt the password using bcrypt
  */
-UserSchema.pre("save", function (next) {
+UserSchema.pre("save", async function () {
   let user = this;
   // only hash the password if it has been modified or is new
-  if (!user.isModified("password")) return next();
+  if (!user.isModified("password")) return Promise.resolve(true);
 
   // generate a salt
-  bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
-    if (err) return next(err);
-
-    // hash the password using our new salt
-    bcrypt.hash(user.password, salt, function (err, hash) {
-      if (err) return next(err);
-
-      // override the cleartext password with the hashed one
-      user.password = hash;
-      next();
-    });
-  });
+  const salt = await bcrypt.genSalt(SALT_WORK_FACTOR); // hash the password using our new salt
+  const hash = await bcrypt.hash(user.password, salt);
+  user.password = hash; // override the cleartext password with the hashed one
 });
 
 /**
@@ -56,13 +47,15 @@ UserSchema.pre("save", function (next) {
  */
 UserSchema.methods = {
   /**
-   * Compare password
+   * Authenticate - check if the passwords are the same
+   *
+   * @param {String} plainText
+   * @return {Boolean}
+   * @api public
    */
-  comparePassword: function (candidatePassword, cb) {
-    bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
-      if (err) return cb(err);
-      cb(null, isMatch);
-    });
+  authenticate: async function (plainText) {
+    const isMatch = await bcrypt.compare(plainText, this.password);
+    return Promise.resolve(isMatch);
   },
 };
 
