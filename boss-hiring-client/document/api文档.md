@@ -84,7 +84,7 @@
 ### 参数类型：
 
 	|参数		|是否必选 |类型     |说明
-	|header    |Y       |string   |头像名称
+	|avatar    |Y       |string   |头像名称
 	|info      |N       |string   |介绍
 	|post      |N       |string   |职位
 	|salary    |N       |string   |月薪
@@ -181,7 +181,7 @@
 	        }
 	    ]
 	}
-	
+
 
 ## 6、获取当前用户的聊天消息列表
 

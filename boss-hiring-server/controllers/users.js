@@ -1,12 +1,11 @@
 const mongoose = require("mongoose");
 const User = require("./../models/user");
-const md5 = require("blueimp-md5");
 
 exports.create = async function (req, res) {
   const { username, password, type } = req.body;
   const user = new User({
     username: username,
-    password: md5(password),
+    password: password,
     type: type,
   });
   try {
@@ -16,7 +15,7 @@ exports.create = async function (req, res) {
       code: 0,
       data: { _id: newUser._id, username, type },
     });
-  } catch {
+  } catch (err) {
     res.send({ code: 1, msg: "This user already exists" });
   }
 };
@@ -27,7 +26,7 @@ exports.login = async function (req, res) {
     const user = await User.findOne(
       {
         username,
-        password: md5(password),
+        password: password,
       },
       { password: 0, __v: 0 }         // 0 means excluding password from result
     ); 

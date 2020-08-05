@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const md5 = require("blueimp-md5");
 
 mongoose.connect("mongodb://localhost:27017/boss-hiring", {
   useNewUrlParser: true,
@@ -26,7 +25,7 @@ const User = mongoose.model("User", userSchema);
 function testSave() {
   const user = new User({
     username: "abc",
-    password: md5("123"), // use md5 for encryption
+    password: "123", 
     type: "employee",
   });
   user.save((err, user) => {
