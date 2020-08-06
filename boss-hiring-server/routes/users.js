@@ -11,5 +11,7 @@ router.get("/", function (req, res, next) {
 router.post("/register", users.create);
 router.post("/login", users.login);
 router.post("/update", users.update);
+router.get('/user', users.show);
+router.get('/userlist', users.index);
 
 module.exports = router;

@@ -91,10 +91,12 @@ UserSchema.statics = {
   },
   /**
    * List all users
+   * @param {Object} options
    * @return {Promise}
    */
-  list: async function () {
-    return (users = await this.find({}));
+  list: async function (options) {
+    console.log(options);
+    return this.find(options.criteria).select(options.select).exec();
   },
 };
 
