@@ -40,14 +40,16 @@ exports.update = async (req, res) => {
   if (!userid) {
     return res.status(500).json({ code: 1, error: "Please login first" });
   }
-
   const update = req.body;
   try {
-    const oldUser = await User.findOneAndUpdate({ userid }, update);
-    const data = Object.assign(only(oldUser, "_id username type"), user);
-    res.json({ code: 0, data });
+    const oldUser = await User.findOneAndUpdate({_id: userid }, update);
+    const user = Object.assign(only(oldUser, "_id username type"), update);
+
+    user.password = undefined;                  // remove password before send json
+
+    res.json({ code: 0, data: user });
   } catch (err) {
-    res.clearCookie("userid"); // 通知浏览器删除userid cookie
+    res.clearCookie("userid");                // clear userid cookie
     res.status(500).json({ code: 1, error: "Please login first" });
   }
 };

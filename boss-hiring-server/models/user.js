@@ -28,14 +28,12 @@ UserSchema.pre("findOneAndUpdate", function (next) {
   next();
 });
 
-UserSchema.pre("findOneAndUpdate", async function () {
-  // this in Query Middleware refers to Query not Doc!!!
-  const user = await this.model.findOne(this.getQuery()); // this.model refer to User Mode
-  const password = this.getUpdate().password;
-  console.log(password);
+UserSchema.pre("findOneAndUpdate", async function () {                         // 'this' in Query Middleware refers to Query not Doc!!!
+  const user = await this.model.findOne(this.getQuery()).exec(); // this.model refer to User Mode
+  const password = this.getUpdate().password;                                  // get to be updated password
   user.password = password;
   const hashed_password = await user.encryptPassword();
-  this.setUpdate({ password: hashed_password });
+  this._update.password = hashed_password;                                     // encrypt the password before updating
 });
 
 /**
@@ -56,6 +54,7 @@ UserSchema.methods = {
       const salt = await bcrypt.genSalt(SALT_WORK_FACTOR); // hash the password using our new salt
       const hash = await bcrypt.hash(user.password, salt);
       user.password = hash; // override the cleartext password with the hashed one
+      return hash;
     } catch (err) {
       throw new Error(err);
     }
