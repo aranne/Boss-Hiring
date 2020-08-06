@@ -29,17 +29,22 @@ const UserSchema = new mongoose.Schema({
 // }, "Name `{username}` already exists");
 
 /**
- * Pre-hook:   Encrypt the password using bcrypt
+ * Encrypt the password using bcrypt
  */
 UserSchema.pre("save", async function () {
-  let user = this;
-  // only hash the password if it has been modified or is new
-  if (!user.isModified("password")) return Promise.resolve(true);
+  await this.encryptPassword();
+});
 
-  // generate a salt
-  const salt = await bcrypt.genSalt(SALT_WORK_FACTOR); // hash the password using our new salt
-  const hash = await bcrypt.hash(user.password, salt);
-  user.password = hash; // override the cleartext password with the hashed one
+/**
+ * Run Validators for findOneAndUpdate() method
+ */
+UserSchema.pre("findOneAndUpdate", function (next) {
+  this.options.runValidators = true;
+  next();
+});
+
+UserSchema.pre("findOneAndUpdate", async function() {
+  await this.encryptPassword();
 });
 
 /**
@@ -47,11 +52,28 @@ UserSchema.pre("save", async function () {
  */
 UserSchema.methods = {
   /**
+   * Encrypt password of current user
+   * @return {Promise}
+   */
+  encryptPassword: async function () {
+    let user = this;
+    // only hash the password if it has been modified or is new
+    if (!user.isModified("password")) return;
+
+    try {
+      // generate a salt
+      const salt = await bcrypt.genSalt(SALT_WORK_FACTOR); // hash the password using our new salt
+      const hash = await bcrypt.hash(user.password, salt);
+      user.password = hash; // override the cleartext password with the hashed one
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
+  /**
    * Authenticate - check if the passwords are the same
    *
    * @param {String} plainText
-   * @return {Boolean}
-   * @api public
+   * @return {Promise}
    */
   authenticate: async function (plainText) {
     const isMatch = await bcrypt.compare(plainText, this.password);
