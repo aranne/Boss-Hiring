@@ -14,21 +14,6 @@ const UserSchema = new mongoose.Schema({
 });
 
 /**
- * Validations
- */
-// UserSchema.path("username").validate(function (username) {
-//   return new Promise((resolve) => {
-//     const User = mongoose.model("User");
-//     // Check this path is new or is modified
-//     if (this.isNew || this.isModified("username")) {
-//       User.find({ username }).exec((err, users) =>
-//         resolve(!err && !users.length)
-//       );
-//     } else resolve(true);
-//   });
-// }, "Name `{username}` already exists");
-
-/**
  * Encrypt the password using bcrypt
  */
 UserSchema.pre("save", async function () {
@@ -43,12 +28,18 @@ UserSchema.pre("findOneAndUpdate", function (next) {
   next();
 });
 
-UserSchema.pre("findOneAndUpdate", async function() {
-  await this.encryptPassword();
+UserSchema.pre("findOneAndUpdate", async function () {
+  // this in Query Middleware refers to Query not Doc!!!
+  const user = await this.model.findOne(this.getQuery()); // this.model refer to User Mode
+  const password = this.getUpdate().password;
+  console.log(password);
+  user.password = password;
+  const hashed_password = await user.encryptPassword();
+  this.setUpdate({ password: hashed_password });
 });
 
 /**
- * Methods
+ * Instance Methods of User Model
  */
 UserSchema.methods = {
   /**
@@ -76,20 +67,35 @@ UserSchema.methods = {
    * @return {Promise}
    */
   authenticate: async function (plainText) {
-    const isMatch = await bcrypt.compare(plainText, this.password);
-    return Promise.resolve(isMatch);
+    let user = this;
+    try {
+      const isMatch = await bcrypt.compare(plainText, user.password);
+      if (!isMatch) return Promise.reject(isMatch);
+      return isMatch;
+    } catch (err) {
+      throw new Error(err);
+    }
   },
 };
 
 /**
- * Statics
+ * Static method of User Model
  */
 UserSchema.statics = {
   /**
-   * Load user
+   * Get an user
+   * @param {Object} options
+   * @return {Promise}
    */
-  load: function func(options, callback) {
-    return this.where(param, new RegExp(param, "i")).exec(callback);
+  load: async function (options) {
+    return this.findOne(options.criteria).select(options.select).exec();
+  },
+  /**
+   * List all users
+   * @return {Promise}
+   */
+  list: async function () {
+    return (users = await this.find({}));
   },
 };
 
