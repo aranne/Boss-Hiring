@@ -6,23 +6,23 @@ import axios from "axios";
  * @param {Object} date             body object for http request
  * @param {Object} customConfig     costom config like params
  */
-export async function client(url, { data, ...customConfig } = {}) {
+export async function client(url, { body, ...customConfig } = {}) {
   const headers = { "Content-Type": "application/json" };
 
   const config = {
     url: url,
-    method: data ? "POST" : "GET",
+    method: body ? "POST" : "GET",
     ...customConfig,
     headers: {
       ...headers,
       ...customConfig.headers,
     },
   };
-
-  if (data) {
-    config.data = data;
+  console.log(body, config.method);
+  if (body) {
+    config.data = body;
   }
-  
+  console.log(config);
   return axios(config);
 }
 

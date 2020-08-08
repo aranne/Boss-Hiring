@@ -4,6 +4,7 @@ const only = require("only");
 
 exports.create = async (req, res) => {
   const user = new User(only(req.body, "username password type"));
+  console.log(user);
   try {
     const newUser = await user.save();
     const data = only(newUser, "_id username type");
