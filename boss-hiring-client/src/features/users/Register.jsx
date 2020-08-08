@@ -43,6 +43,7 @@ function Register() {
       );
       const user = unwrapResult(resultAction);
     } catch (err) {
+      console.log(err);
       if (err.response) {
         alert(err.response.data);
       } else if (err.request) {

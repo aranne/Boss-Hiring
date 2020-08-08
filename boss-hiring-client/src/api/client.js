@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const baseURL = "http://localhost:4000";
+
 /**
  *
  * @param {String} url
@@ -10,7 +12,7 @@ export async function client(url, { body, ...customConfig } = {}) {
   const headers = { "Content-Type": "application/json" };
 
   const config = {
-    url: url,
+    url: baseURL + url,
     method: body ? "POST" : "GET",
     ...customConfig,
     headers: {
@@ -18,11 +20,9 @@ export async function client(url, { body, ...customConfig } = {}) {
       ...customConfig.headers,
     },
   };
-  console.log(body, config.method);
   if (body) {
     config.data = body;
   }
-  console.log(config);
   return axios(config);
 }
 
