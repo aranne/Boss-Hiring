@@ -42,7 +42,6 @@ function Register() {
         register({ username, password, type })
       );
       const user = unwrapResult(resultAction);
-      console.log(user);
     } catch (err) {
       if (err.response) {
         alert(err.response.data);

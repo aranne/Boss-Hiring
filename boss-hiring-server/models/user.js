@@ -95,7 +95,6 @@ UserSchema.statics = {
    * @return {Promise}
    */
   list: async function (options) {
-    console.log(options);
     return this.find(options.criteria).select(options.select).exec();
   },
 };
