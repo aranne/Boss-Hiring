@@ -36,24 +36,22 @@ function Register() {
 
   const onRegisterClick = async () => {
     if (!canSave) return;
-    try {
-      setAddRequestStatus("pending");
-      const resultAction = await dispatch(
-        register({ username, password, type })
-      );
+    setAddRequestStatus("pending");
+    const resultAction = await dispatch(              // since we use rejectWithValue, we don't need to unwarp the result
+      register({ username, password, type })
+    );
+    if (register.fulfilled.match(resultAction)) {     // succeed
       const user = unwrapResult(resultAction);
-    } catch (err) {
-      console.log(err);
-      if (err.response) {
-        alert(err.response.data);
-      } else if (err.request) {
-        alert(err.register);
+      console.log(user);
+    } else {
+      if (resultAction.payload) {
+        alert(resultAction.payload.message);
       } else {
-        alert(err.message);
+        console.log(resultAction.error);
+        alert('Sign in failed: ' + resultAction.error.message);
       }
-    } finally {
-      setAddRequestStatus("idle");
     }
+    setAddRequestStatus("idle");
   };
 
   const getRedirectPath = (user) => {
@@ -121,7 +119,7 @@ function Register() {
           </ListItem>
 
           <ListItem>
-            <Button type="primary" onClick={onRegisterClick}>
+            <Button type="primary" onClick={onRegisterClick} disabled={!canSave}>
               Sign In
             </Button>
           </ListItem>

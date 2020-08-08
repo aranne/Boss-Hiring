@@ -12,17 +12,31 @@ const usersAdapter = createEntityAdapter({
 
 export const register = createAsyncThunk(
   "users/register",
-  async (user) => {
-    const response = await reqRegister(user);
-    return response.data.user;
+  async (user, { rejectWithValue }) => {
+    try {
+      const response = await reqRegister(user);
+      return response.data.user;
+    } catch (err) {
+      if (!err.response) {
+        throw err;
+      }
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
 export const login = createAsyncThunk(
   "users/login",
-  async (user) => {
-    const response = await reqLogin(user);
-    return response.data.user;
+  async (user, { rejectWithValue }) => {
+    try {
+      const response = await reqLogin(user);
+      return response.data.user;
+    } catch (err) {
+      if (!err.response) {
+        throw err;
+      }
+      return rejectWithValue(err.response.data);
+    }
   }
 );
 
@@ -50,4 +64,4 @@ export const {
   selectAll: selectAllUsers,
   selectById: selectUserById,
   selectIds: selectUserIds,
-} = usersAdapter.getSelectors(state => state.users);
+} = usersAdapter.getSelectors((state) => state.users);
