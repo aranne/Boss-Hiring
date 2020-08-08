@@ -1,14 +1,14 @@
 /**
  * HTTP Request API
  */
-import axios from "./ajax";
+import {client} from './client';
 
 /**
  * Register
  * @param {Object} user
  */
 export const reqRegister = (user) => {
-  return axios("/users/register", user, "POST");
+  return client.post('/users/register', user);
 };
 
 /**
@@ -16,7 +16,7 @@ export const reqRegister = (user) => {
  * @param {Object} user
  */
 export const reqLogin = (user) => {
-  return axios("/users/login", user, "POST");
+  return client.post('/users/login', user);
 };
 
 /**
@@ -24,5 +24,5 @@ export const reqLogin = (user) => {
  * @param {Object} user
  */
 export const reqUpdate = (user) => {
-  return axios("/users/update", user, "POST");
+  return client.post('/users/update', user);
 };

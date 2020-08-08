@@ -7,7 +7,7 @@ import {
   InputItem,
   Button,
 } from "antd-mobile";
-import Logo from "./../../components/logo/logo";
+import Logo from "../../app/log/logo";
 
 const ListItem = List.Item;
 
@@ -15,14 +15,6 @@ function Login(props) {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   let history = useHistory(); // use history hooks
-
-  const handleChange = (name, val) => {
-    if (name === "username") {
-      setUserName(val);
-    } else {
-      setPassword(val);
-    }
-  };
 
   const register = () => {};
 
@@ -39,7 +31,7 @@ function Login(props) {
           <ListItem>
             <InputItem
               placeholder={"Please enter your user name"}
-              onChange={(val) => handleChange("username", val)}
+              onChange={(val) => setUserName(val)}
             >
               User Name
             </InputItem>
@@ -48,7 +40,7 @@ function Login(props) {
             <InputItem
               type="password"
               placeholder={"Please enter your password"}
-              onChange={(val) => handleChange("password", val)}
+              onChange={(val) => setPassword(val)}
             >
               Password
             </InputItem>

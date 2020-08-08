@@ -9,9 +9,9 @@ exports.create = async (req, res) => {
     const data = only(newUser, "_id username type");
 
     res.cookie("userid", newUser._id, { maxAge: 1000 * 60 * 60 * 24 });
-    res.json({ code: 0, data: data });
+    res.json({ user: data });
   } catch (err) {
-    res.status(500).json({ code: 1, error: "This user already exists" });
+    res.status(500).json({ msg: "This user already exists" });
   }
 };
 
@@ -24,12 +24,10 @@ exports.login = async (req, res) => {
     user.password = undefined; // remove password before send json
 
     res.cookie("userid", user._id, { maxAge: 1000 * 60 * 60 * 24 });
-    res.json({ code: 0, user });
+    res.json({ user });
   } catch (err) {
     res.clearCookie("userid"); // clear userid cookie
-    res
-      .status(500)
-      .json({ code: 1, error: "Username or Password is not correct" });
+    res.status(500).json({ msg: "Username or Password is not correct" });
   }
 };
 
@@ -37,7 +35,7 @@ exports.update = async (req, res) => {
   const userid = req.cookies.userid;
 
   if (!userid) {
-    return res.status(500).json({ code: 1, error: "Please login first" });
+    return res.status(500).json({ msg: "Please login first" });
   }
   const update = req.body;
   try {
@@ -45,10 +43,10 @@ exports.update = async (req, res) => {
     const user = Object.assign(only(oldUser, "_id username type"), update);
     user.password = undefined; // remove password before send json
 
-    res.json({ code: 0, data: user });
+    res.json({ user });
   } catch (err) {
     // res.clearCookie("userid"); // clear userid cookie
-    res.status(500).json({ code: 1, error: "Update Error" });
+    res.status(500).json({ msg: "Update Error" });
   }
 };
 
@@ -56,17 +54,17 @@ exports.show = async (req, res) => {
   const userid = req.cookies.userid;
 
   if (!userid) {
-    return res.status(500).json({ code: 1, error: "Please login first" });
+    return res.status(500).json({ msg: "Please login first" });
   }
 
   const criteria = { _id: userid };
   const select = { password: 0 };
   try {
     const user = await User.load({ criteria, select });
-    res.json({ code: 0, data: user });
+    res.json({ user });
   } catch (err) {
     res.clearCookie("userid"); // clear userid cookie
-    res.status(500).json({ code: 1, error: "Please login first" });
+    res.status(500).json({ msg: "Please login first" });
   }
 };
 
@@ -77,7 +75,7 @@ exports.index = async (req, res) => {
   const select = { password: 0 };
   try {
     const users = await User.list({ criteria, select });
-    res.json({ code: 0, data: users });
+    res.json({ users });
   } catch (err) {
     res.end();
   }

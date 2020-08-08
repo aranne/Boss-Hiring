@@ -9,7 +9,7 @@ import {
   Button,
   Flex,
 } from "antd-mobile";
-import Logo from "./../../components/logo/logo";
+import Logo from "../../app/log/logo";
 
 const ListItem = List.Item;
 const FlexItem = Flex.Item;
