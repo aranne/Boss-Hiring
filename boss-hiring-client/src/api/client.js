@@ -1,5 +1,4 @@
 import axios from "axios";
-import { response } from "../../../boss-hiring-server/app";
 
 /**
  *

@@ -11,7 +11,7 @@ import Logo from "../../app/log/logo";
 
 const ListItem = List.Item;
 
-function Login(props) {
+function Login() {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   let history = useHistory(); // use history hooks
