@@ -1,5 +1,5 @@
 import axios from "axios";
-import { logoutUser } from "../features/users/usersSlice";
+import { logout } from "../features/users/authSlice";
 
 const httpService = {
   setupInterceptors: (store) => {
@@ -9,7 +9,7 @@ const httpService = {
       },
       (error) => {    // Any status codes that falls outside the range of 2xx cause this function to trigger
         if (error.response.status === 401) {
-          store.dispatch(logoutUser());
+          store.dispatch(logout());
         }
         return Promise.reject(error);
       }

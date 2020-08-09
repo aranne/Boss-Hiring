@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { useHistory, Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { register } from "./usersSlice";
-import { unwrapResult } from "@reduxjs/toolkit";
+import { register } from "./authSlice";
 import {
   NavBar,
   WingBlank,
@@ -30,7 +29,7 @@ function Register() {
 
   const onUsernameChange = (val) => setUserName(val);
   const onPasswordChange = (val) => setPassword(val);
-  
+
   const onTypeStyleClick1 = () => {
     setType("employer");
     if (typeStyle1 !== "primary") {
@@ -58,8 +57,7 @@ function Register() {
     );
     if (register.fulfilled.match(resultAction)) {
       // succeed
-      const user = unwrapResult(resultAction);
-      history.push(getRedirectPath(user));
+      // history.push("/");
     } else {
       if (resultAction.payload) {
         Toast.fail(resultAction.payload.message, 1.5);
@@ -68,20 +66,6 @@ function Register() {
       }
     }
     setAddRequestStatus("idle");
-  };
-
-  const getRedirectPath = (user) => {
-    let path;
-    if (user.type === "employee") {
-      path = "/employee";
-    } else if (user.type === "employer") {
-      path = "/employer";
-    }
-    // if (Object.keys(user).filter(key => user[key]).length <= 3) {
-    //   // fill out info form
-    //   path += "/info";
-    // }
-    return path;
   };
 
   const toLoginClick = () => {

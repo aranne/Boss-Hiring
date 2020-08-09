@@ -1,16 +1,9 @@
 import React, { useState } from "react";
-import { useHistory, Redirect } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { login } from "./usersSlice";
+import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login, selectLoadingStatus } from "./authSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
-import {
-  NavBar,
-  WingBlank,
-  List,
-  InputItem,
-  Button,
-  Toast,
-} from "antd-mobile";
+import { NavBar, WingBlank, List, InputItem, Button, Toast } from "antd-mobile";
 import Logo from "../../app/logo/logo";
 
 const ListItem = List.Item;
@@ -18,24 +11,27 @@ const ListItem = List.Item;
 function Login() {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [addRequestStatus, setAddRequestStatus] = useState("idle");
 
   let history = useHistory(); // use history hooks
   const dispatch = useDispatch();
+
+  const loadingStatus = useSelector(selectLoadingStatus);
 
   const onUsernameChange = (val) => setUserName(val);
   const onPasswordChange = (val) => setPassword(val);
 
   const canLogin =
-    [username, password].every(Boolean) && addRequestStatus === "idle";
+    [username, password].every(Boolean) && loadingStatus === "idle";
 
-  const onLoginClick = async () => {
-    if (!canLogin) return;
-    setAddRequestStatus("pending");
-    const resultAction = await dispatch(
-      // since we use rejectWithValue, we don't need to unwarp the result
-      login({ username, password})
-    );
+  const onLoginClick = () => {
+    if (loadingStatus === "idle") {
+      loginRequest();
+    }
+  };
+
+  const loginRequest = async () => {
+    // since we use rejectWithValue, we don't need to unwarp the result
+    const resultAction = await dispatch(login({ username, password }));
     if (login.fulfilled.match(resultAction)) {
       // succeed
       const user = unwrapResult(resultAction);
@@ -47,19 +43,14 @@ function Login() {
         Toast.fail(resultAction.error.message, 1.5);
       }
     }
-    setAddRequestStatus("idle");
   };
 
   const getRedirectPath = (user) => {
     let path;
-    if (user.type === "employee") {
-      path = "/employee";
-    } else if (user.type === "employer") {
-      path = "/employer";
-    }
-    if (Object.keys(user).filter(key => user[key]).length <= 3) {
-      // fill out info form
-      path += "/info";
+    if (Object.keys(user).filter((key) => user[key]).length <= 3) {
+      path = "/"; // fill out info form
+    } else {
+      path = "/";
     }
     return path;
   };
@@ -79,7 +70,7 @@ function Login() {
               placeholder={"Please enter your user name"}
               onChange={onUsernameChange}
             >
-              User Name
+              Username
             </InputItem>
           </ListItem>
           <ListItem>
