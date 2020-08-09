@@ -30,7 +30,21 @@ function Register() {
 
   const onUsernameChange = (val) => setUserName(val);
   const onPasswordChange = (val) => setPassword(val);
-  const onTypeChange = (val) => setType(val);
+  
+  const onTypeStyleClick1 = () => {
+    setType("employer");
+    if (typeStyle1 !== "primary") {
+      setTypeStyle1("primary");
+      setTypeStyle2("");
+    }
+  };
+  const onTypeStyleClick2 = () => {
+    setType("employee");
+    if (typeStyle2 !== "primary") {
+      setTypeStyle2("primary");
+      setTypeStyle1("");
+    }
+  };
 
   const canSave =
     [username, password, type].every(Boolean) && addRequestStatus === "idle";
@@ -56,21 +70,6 @@ function Register() {
     setAddRequestStatus("idle");
   };
 
-  const onTypeStyleClick1 = () => {
-    setType("employer");
-    if (typeStyle1 !== "primary") {
-      setTypeStyle1("primary");
-      setTypeStyle2("");
-    }
-  };
-  const onTypeStyleClick2 = () => {
-    setType("employee");
-    if (typeStyle2 !== "primary") {
-      setTypeStyle2("primary");
-      setTypeStyle1("");
-    }
-  };
-
   const getRedirectPath = (user) => {
     let path;
     if (user.type === "employee") {
@@ -78,7 +77,7 @@ function Register() {
     } else if (user.type === "employer") {
       path = "/employer";
     }
-    if (Object.keys(user).length <= 4) {
+    if (Object.keys(user).filter(key => user[key]).length <= 3) {
       // fill out info form
       path += "/info";
     }
