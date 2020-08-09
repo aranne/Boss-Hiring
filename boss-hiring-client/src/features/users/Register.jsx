@@ -8,7 +8,6 @@ import {
   WingBlank,
   List,
   InputItem,
-  Radio,
   Button,
   Flex,
 } from "antd-mobile";
@@ -16,12 +15,13 @@ import Logo from "../../app/log/logo";
 
 const ListItem = List.Item;
 const FlexItem = Flex.Item;
-const RadioItem = Radio.RadioItem;
 
 function Register() {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [type, setType] = useState("employer");
+  const [typeStyle1, setTypeStyle1] = useState("primary");
+  const [typeStyle2, setTypeStyle2] = useState("");
   const [addRequestStatus, setAddRequestStatus] = useState("idle");
 
   let history = useHistory(); // use history hooks
@@ -37,21 +37,37 @@ function Register() {
   const onRegisterClick = async () => {
     if (!canSave) return;
     setAddRequestStatus("pending");
-    const resultAction = await dispatch(              // since we use rejectWithValue, we don't need to unwarp the result
+    const resultAction = await dispatch(
+      // since we use rejectWithValue, we don't need to unwarp the result
       register({ username, password, type })
     );
-    if (register.fulfilled.match(resultAction)) {     // succeed
+    if (register.fulfilled.match(resultAction)) {
+      // succeed
       const user = unwrapResult(resultAction);
       console.log(user);
     } else {
       if (resultAction.payload) {
         alert(resultAction.payload.message);
       } else {
-        console.log(resultAction.error);
-        alert('Sign in failed: ' + resultAction.error.message);
+        alert("Sign in failed: " + resultAction.error.message);
       }
     }
     setAddRequestStatus("idle");
+  };
+
+  const onTypeStyleClick1 = () => {
+    setType("employer");
+    if (typeStyle1 !== "primary") {
+      setTypeStyle1("primary");
+      setTypeStyle2("");
+    }
+  };
+  const onTypeStyleClick2 = () => {
+    setType("employee");
+    if (typeStyle2 !== "primary") {
+      setTypeStyle2("primary");
+      setTypeStyle1("");
+    }
   };
 
   const getRedirectPath = (user) => {
@@ -99,27 +115,24 @@ function Register() {
           <ListItem>
             <Flex>
               <FlexItem>
-                <RadioItem
-                  checked={type === "employer"}
-                  onChange={() => onTypeChange("employer")}
-                  defaultChecked
-                >
+                <Button type={typeStyle1} onClick={onTypeStyleClick1}>
                   I'm an Employer
-                </RadioItem>
+                </Button>
               </FlexItem>
               <FlexItem>
-                <RadioItem
-                  checked={type === "employee"}
-                  onChange={() => onTypeChange("employee")}
-                >
+                <Button type={typeStyle2} onClick={onTypeStyleClick2}>
                   I'm a Job Seeker
-                </RadioItem>
+                </Button>
               </FlexItem>
             </Flex>
           </ListItem>
 
           <ListItem>
-            <Button type="primary" onClick={onRegisterClick} disabled={!canSave}>
+            <Button
+              type="primary"
+              onClick={onRegisterClick}
+              disabled={!canSave}
+            >
               Sign In
             </Button>
           </ListItem>
