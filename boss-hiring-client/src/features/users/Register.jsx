@@ -10,6 +10,7 @@ import {
   InputItem,
   Button,
   Flex,
+  Toast,
 } from "antd-mobile";
 import Logo from "../../app/log/logo";
 
@@ -47,9 +48,9 @@ function Register() {
       console.log(user);
     } else {
       if (resultAction.payload) {
-        alert(resultAction.payload.message);
+        Toast.fail(resultAction.payload.message);
       } else {
-        alert("Sign in failed: " + resultAction.error.message);
+        Toast.fail(resultAction.error.message);
       }
     }
     setAddRequestStatus("idle");
