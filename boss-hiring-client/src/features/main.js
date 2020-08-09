@@ -3,7 +3,7 @@ import { Switch, Route, useRouteMatch, Link } from "react-router-dom";
 import AddUserInfoForm from "./users/AddUserInfoForm";
 
 function Main() {
-  let { path } = useRouteMatch();
+  const { path } = useRouteMatch();
   return (
     <div>
       <Link to={`${path}/userinfo`}>User Info</Link>

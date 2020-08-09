@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { register } from "./authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { register, selectLoadingStatus } from "./authSlice";
 import {
   NavBar,
   WingBlank,
@@ -22,10 +22,11 @@ function Register() {
   const [type, setType] = useState("employer");
   const [typeStyle1, setTypeStyle1] = useState("primary");
   const [typeStyle2, setTypeStyle2] = useState("");
-  const [addRequestStatus, setAddRequestStatus] = useState("idle");
 
   let history = useHistory(); // use history hooks
   const dispatch = useDispatch();
+
+  const loadingStatus = useSelector(selectLoadingStatus);
 
   const onUsernameChange = (val) => setUserName(val);
   const onPasswordChange = (val) => setPassword(val);
@@ -45,19 +46,21 @@ function Register() {
     }
   };
 
-  const canSave =
-    [username, password, type].every(Boolean) && addRequestStatus === "idle";
+  const canLogin =
+    [username, password].every(Boolean) && loadingStatus === "idle";
 
-  const onRegisterClick = async () => {
-    if (!canSave) return;
-    setAddRequestStatus("pending");
-    const resultAction = await dispatch(
-      // since we use rejectWithValue, we don't need to unwarp the result
-      register({ username, password, type })
-    );
+  const onRegisterClick = () => {
+    if (loadingStatus === 'idle') {
+      registerRequest();
+    }
+  };
+
+  const registerRequest = async () => {
+    // since we use rejectWithValue, we don't need to unwarp the result
+    const resultAction = await dispatch(register({ username, password, type }));
     if (register.fulfilled.match(resultAction)) {
       // succeed
-      // history.push("/");
+      history.push("/");
     } else {
       if (resultAction.payload) {
         Toast.fail(resultAction.payload.message, 1.5);
@@ -65,7 +68,6 @@ function Register() {
         Toast.fail(resultAction.error.message, 1.5);
       }
     }
-    setAddRequestStatus("idle");
   };
 
   const toLoginClick = () => {
@@ -115,7 +117,7 @@ function Register() {
             <Button
               type="primary"
               onClick={onRegisterClick}
-              disabled={!canSave}
+              disabled={!canLogin}
             >
               Sign In
             </Button>
