@@ -1,20 +1,20 @@
 import React from "react";
-import { Switch, Route, useRouteMatch } from "react-router-dom";
+import { Switch, Route, useRouteMatch, Link } from "react-router-dom";
 import AddUserInfoForm from "./users/AddUserInfoForm";
 
 function Main() {
+  let { path } = useRouteMatch();
   return (
-    <div>Main</div>
-  )
-  // let {path} = useRouteMatch();
-  // console.log(path);
-  // return (
-  //   <Switch>
-  //     <Route path={`${path}/userinfo`}>
-  //       <AddUserInfoForm />
-  //     </Route>
-  //   </Switch>
-  // );
+    <div>
+      <Link to={`${path}/userinfo`}>User Info</Link>
+      <Switch>
+        {/* Since this is a secondary route, we must retrieve path */}
+        <Route path={`${path}/userinfo`}>
+          <AddUserInfoForm />
+        </Route>
+      </Switch>
+    </div>
+  );
 }
 
 export default Main;
