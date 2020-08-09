@@ -11,7 +11,7 @@ exports.create = async (req, res) => {
     res.cookie("userid", newUser._id, { maxAge: 1000 * 60 * 60 * 24 });
     res.json({ user: data });
   } catch (err) {
-    res.status(500).json({ message: "This user already exists" });
+    res.status(400).json({ message: "This user already exists" });
   }
 };
 
@@ -27,7 +27,7 @@ exports.login = async (req, res) => {
     res.json({ user });
   } catch (err) {
     res.clearCookie("userid"); // clear userid cookie
-    res.status(500).json({ message: "Username or Password is not correct" });
+    res.status(401).json({ message: "Username or Password is not correct" });
   }
 };
 
@@ -35,7 +35,7 @@ exports.update = async (req, res) => {
   const userid = req.cookies.userid;
 
   if (!userid) {
-    return res.status(500).json({ message: "Please login first" });
+    return res.status(401).json({ message: "Please login first" });
   }
   const update = req.body;
   try {
@@ -46,7 +46,7 @@ exports.update = async (req, res) => {
     res.json({ user });
   } catch (err) {
     // res.clearCookie("userid"); // clear userid cookie
-    res.status(500).json({ message: "Update Error" });
+    res.status(400).json({ message: "Update Error" });
   }
 };
 
@@ -54,7 +54,7 @@ exports.show = async (req, res) => {
   const userid = req.cookies.userid;
 
   if (!userid) {
-    return res.status(500).json({ message: "Please login first" });
+    return res.status(401).json({ message: "Please login first" });
   }
 
   const criteria = { _id: userid };
@@ -64,7 +64,7 @@ exports.show = async (req, res) => {
     res.json({ user });
   } catch (err) {
     res.clearCookie("userid"); // clear userid cookie
-    res.status(500).json({ message: "Please login first" });
+    res.status(401).json({ message: "Please login first" });
   }
 };
 

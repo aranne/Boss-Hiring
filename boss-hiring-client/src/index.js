@@ -4,6 +4,9 @@ import { Provider } from "react-redux";
 
 import store from "./app/store";
 import App from "./App";
+import httpService from './api/interceptors';
+
+httpService.setupInterceptors(store);           // use http interceptor
 
 ReactDOM.render(
   <React.StrictMode>

@@ -47,7 +47,11 @@ const usersSlice = createSlice({
     status: "idle",
     error: null,
   }),
-  reducers: {},
+  reducers: {
+    logoutUser: (state, action) => {
+      state.currentUserId = null;
+    },
+  },
   extraReducers: {
     [register.fulfilled]: (state, action) => {
       state.currentUserId = action.payload._id;
@@ -60,8 +64,12 @@ const usersSlice = createSlice({
 
 export default usersSlice.reducer;
 
+export const { logoutUser } = usersSlice.actions;
+
 export const {
   selectAll: selectAllUsers,
   selectById: selectUserById,
   selectIds: selectUserIds,
 } = usersAdapter.getSelectors((state) => state.users);
+
+export const selectCurrentUserId = (state) => state.users.currentUserId;

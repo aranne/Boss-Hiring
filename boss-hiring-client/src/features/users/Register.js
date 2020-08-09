@@ -12,7 +12,7 @@ import {
   Flex,
   Toast,
 } from "antd-mobile";
-import Logo from "../../app/log/logo";
+import Logo from "../../app/logo/logo";
 
 const ListItem = List.Item;
 const FlexItem = Flex.Item;
@@ -59,7 +59,7 @@ function Register() {
     if (register.fulfilled.match(resultAction)) {
       // succeed
       const user = unwrapResult(resultAction);
-      console.log(user);
+      history.push(getRedirectPath(user));
     } else {
       if (resultAction.payload) {
         Toast.fail(resultAction.payload.message, 1.5);
@@ -77,10 +77,10 @@ function Register() {
     } else if (user.type === "employer") {
       path = "/employer";
     }
-    if (Object.keys(user).filter(key => user[key]).length <= 3) {
-      // fill out info form
-      path += "/info";
-    }
+    // if (Object.keys(user).filter(key => user[key]).length <= 3) {
+    //   // fill out info form
+    //   path += "/info";
+    // }
     return path;
   };
 
