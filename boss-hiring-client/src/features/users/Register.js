@@ -62,9 +62,9 @@ function Register() {
       console.log(user);
     } else {
       if (resultAction.payload) {
-        Toast.fail(resultAction.payload.message);
+        Toast.fail(resultAction.payload.message, 1.5);
       } else {
-        Toast.fail(resultAction.error.message);
+        Toast.fail(resultAction.error.message, 1.5);
       }
     }
     setAddRequestStatus("idle");
