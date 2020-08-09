@@ -12,17 +12,19 @@ const usersAdapter = createEntityAdapter({
 const usersSlice = createSlice({
   name: "users",
   initialState: usersAdapter.getInitialState({
-    loading: 'idle',
+    loading: "idle",
     currentRequestId: null,
     error: null,
   }),
   reducers: {
+    userAdded: usersAdapter.addOne,
   },
-  extraReducers: {
-  },
+  extraReducers: {},
 });
 
 export default usersSlice.reducer;
+
+export const { userAdded } = usersSlice.actions;
 
 export const {
   selectAll: selectAllUsers,

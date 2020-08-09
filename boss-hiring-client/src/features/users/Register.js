@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { unwrapResult } from "@reduxjs/toolkit";
 import { register, selectLoadingStatus } from "./authSlice";
+import { userAdded } from "./usersSlice";
 import {
   NavBar,
   WingBlank,
@@ -50,7 +52,7 @@ function Register() {
     [username, password].every(Boolean) && loadingStatus === "idle";
 
   const onRegisterClick = () => {
-    if (loadingStatus === 'idle') {
+    if (loadingStatus === "idle") {
       registerRequest();
     }
   };
@@ -60,6 +62,8 @@ function Register() {
     const resultAction = await dispatch(register({ username, password, type }));
     if (register.fulfilled.match(resultAction)) {
       // succeed
+      const user = unwrapResult(resultAction);
+      dispatch(userAdded(user));                  // add new user to users
       history.push("/");
     } else {
       if (resultAction.payload) {
