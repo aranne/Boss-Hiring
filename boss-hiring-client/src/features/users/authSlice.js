@@ -41,14 +41,14 @@ export const login = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    currentUserId: null,
+    currentUser: null,
     loading: "idle",
     currentReqeustId: undefined,
     error: null,
   },
   reducers: {
     logout: (state) => {
-      state.currentUserId = null;
+      state.currentUser = null;
     },
   },
   extraReducers: {
@@ -63,7 +63,7 @@ const authSlice = createSlice({
         state.loading === "pending" &&
         state.currentReqeustId === action.meta.requestId
       ) {
-        state.currentUserId = action.payload._id;
+        state.currentUser = action.payload;
         state.loading = "idle";
         state.currentReqeustId = undefined;
       }
@@ -90,7 +90,7 @@ const authSlice = createSlice({
         state.loading === "pending" &&
         state.currentReqeustId === action.meta.requestId
       ) {
-        state.currentUserId = action.payload._id;
+        state.currentUser = action.payload;
         state.loading = "idle";
         state.currentReqeustId = undefined;
       }
@@ -112,5 +112,5 @@ export default authSlice.reducer;
 
 export const { logout } = authSlice.actions;
 
-export const selectCurrentUserId = (state) => state.auth.currentUserId;
+export const selectCurrentUser = (state) => state.auth.currentUser;
 export const selectLoadingStatus = (state) => state.auth.loading;

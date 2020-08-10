@@ -60,8 +60,7 @@ function Register() {
       const user = unwrapResult(resultAction);
       const type = { type: user.type === "employer" ? "employee" : "employer" };
       await dispatch(fetchUsers(type)); // fetch all users when login
-      const userId = {userId: user._id};
-      wsClient.send(JSON.stringify(userId)); // build TCP connection between client and server for users list updated
+      wsClient.send(JSON.stringify({ type: user.type })); // build TCP connection between client and server for users list updated
       history.push("/");
     } else {
       if (resultAction.payload) {

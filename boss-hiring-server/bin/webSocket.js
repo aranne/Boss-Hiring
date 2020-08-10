@@ -16,14 +16,14 @@ exports.wsSocketListen = (wsSever) => {
     var connection = request.accept("echo-protocol", request.origin);
     console.log(new Date() + " Connection accepted.");
 
-    const userId = nanoid();
+    const clientId = nanoid();
     connection.on("message", function (message) {
       if (message.type === "utf8") {
         console.log("Received Message: " + message.utf8Data);
         const obj = JSON.parse(message.utf8Data);
         // new client
-        if ("userId" in obj) {
-          clients[userId] = { connection: connection, userId: obj.userId };
+        if ("type" in obj) {
+          clients[clientId] = { connection: connection, type: obj.type };
         }
       }
     });
@@ -31,7 +31,7 @@ exports.wsSocketListen = (wsSever) => {
       console.log(
         new Date() + " Peer " + connection.remoteAddress + " disconnected."
       );
-      delete clients[userId]; // don't forget delete disconnected connection
+      delete clients[clientId]; // don't forget delete client
     });
   });
 };
@@ -41,18 +41,21 @@ function originIsAllowed(origin) {
   return true;
 }
 
-exports.notifyAll = () => {
-  Object.keys(clients).map(async (client) => {
-    let criteria = { _id: clients[client].userId };
-    const select = { password: 0 };
+/**
+ * Notify one type of clients of the other type new users's list
+ * @param {Type} type the type of clients need to be notified
+ */
+exports.notifyAll = async (type) => {
+  const otherType = type === "employer" ? "employee" : "employer";
+  for (let client in clients) {
+    if (clients[client].type !== type) continue;
     try {
-      const user = await User.load({ criteria, select });
-      const type = user.type === "employee" ? "employer" : "employee";
-      criteria = { type };
+      const criteria = { type: otherType };
+      const select = { password: 0 };
       const users = await User.list({ criteria, select });
       clients[client].connection.sendUTF(JSON.stringify(users));
     } catch (err) {
       throw err;
     }
-  });
+  }
 };

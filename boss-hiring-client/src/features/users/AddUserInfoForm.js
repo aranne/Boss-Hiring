@@ -2,13 +2,11 @@ import React from "react";
 import { NavBar, Icon, InputItem } from "antd-mobile";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectUserById } from "./usersSlice";
-import { selectCurrentUserId } from "./authSlice";
+import { selectCurrentUser } from "./authSlice";
 
 function AddUserInfoForm() {
   const history = useHistory();
-  const userId = useSelector(selectCurrentUserId);
-  const user = useSelector((state) => selectUserById(state, userId));
+  const user = useSelector(selectCurrentUser);
 
   const onLeftClick = () => {
     history.push("/");
@@ -27,12 +25,11 @@ function AddUserInfoForm() {
       >
         Set up your profile
       </NavBar>
-      {/* {user.type === "employer" ? (
+      {user.type === "employer" ? (
         <InputItem>Job Title</InputItem>
       ) : (
         <InputItem></InputItem>
-      )} */}
-
+      )}
     </div>
   );
 }
