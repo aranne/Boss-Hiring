@@ -66,7 +66,7 @@ function Login() {
         <List>
           <ListItem>
             <InputItem
-              placeholder={"Please enter your user name"}
+              placeholder={"Enter your user name"}
               onChange={onUsernameChange}
             >
               Username
@@ -75,7 +75,7 @@ function Login() {
           <ListItem>
             <InputItem
               type="password"
-              placeholder={"Please enter your password"}
+              placeholder={"Enter your password"}
               onChange={onPasswordChange}
             >
               Password
