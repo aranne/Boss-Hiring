@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login, selectLoadingStatus } from "./authSlice";
+import { fetchUsers } from "./usersSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { NavBar, WingBlank, List, InputItem, Button, Toast } from "antd-mobile";
 import Logo from "../../app/logo/logo";
@@ -29,6 +30,8 @@ function Login() {
     if (login.fulfilled.match(resultAction)) {
       // succeed
       const user = unwrapResult(resultAction);
+      const type = { type: user.type === "employer" ? "employee" : "employer" };
+      await dispatch(fetchUsers(type)); // fetch all users when login
       history.push(getRedirectPath(user));
     } else {
       if (resultAction.payload) {

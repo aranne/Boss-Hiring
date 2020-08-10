@@ -10,16 +10,23 @@ const usersAdapter = createEntityAdapter({
   sortComparer: (a, b) => a.username.localeCompare(b.username),
 });
 
-const fetchUsers = createAsyncThunk("users/fetchUsers", async (type) => {
-  const response = await reqAllUsers(type);
-  return response.data.users;
-});
+export const fetchUsers = createAsyncThunk(
+  "users/fetchUsers",
+  async (type, { requestId, getState }) => {
+    const { loading, currentRequestId } = getState().users;
+    if (loading !== "pending" || currentRequestId !== requestId) {
+      return Promise.reject("Try it later");
+    }
+    const response = await reqAllUsers(type);
+    return response.data.users;
+  }
+);
 
 const usersSlice = createSlice({
   name: "users",
   initialState: usersAdapter.getInitialState({
     loading: "idle",
-    currentRequestId: null,
+    currentRequestId: undefined,
     error: null,
   }),
   reducers: {
@@ -27,8 +34,31 @@ const usersSlice = createSlice({
   },
   extraReducers: {
     [fetchUsers.pending]: (state, action) => {
-      
-    }
+      if (state.loading === "idle") {
+        state.loading = "pending";
+        state.currentRequestId = action.meta.requestId;
+      }
+    },
+    [fetchUsers.fulfilled]: (state, action) => {
+      if (
+        state.loading === "pending" &&
+        state.currentRequestId === action.meta.requestId
+      ) {
+        state.loading = "idle";
+        state.currentRequestId = undefined;
+        usersAdapter.upsertMany(state, action.payload);     // upsert many users into list
+      }
+    },
+    [fetchUsers.rejected]: (state, action) => {
+      if (
+        state.loading === "pending" &&
+        state.currentRequestId === action.meta.requestId
+      ) {
+        state.loading = "idle";
+        state.currentRequestId = undefined;
+        state.error = action.error;
+      }
+    },
   },
 });
 
