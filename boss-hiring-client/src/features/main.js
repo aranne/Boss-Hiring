@@ -14,7 +14,7 @@ function Main() {
       <Switch>
         {/* Since this is a secondary route, we must retrieve path */}
         <Route path={`${path}/userinfo`}>
-          {user.type === 'employer' ? (
+          {user.type === 'employee' ? (
             <AddSeekerInfoForm />
           ) : (
             <AddBossInfoForm />

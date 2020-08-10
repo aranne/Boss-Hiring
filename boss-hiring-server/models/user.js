@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true }, // 密码
   type: { type: String, required: true }, // 用户类型: employer/employee
   avatar: { type: String, default: "" }, // 头像
-  post: { type: String, default: "" }, // 职位
+  title: { type: String, default: "" }, // 职位
   info: { type: String, default: "" }, // 个人或职位简介
   company: { type: String, default: "" }, // 公司名称
   salary: { type: String, default: "" }, // 工资
