@@ -3,7 +3,8 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { register, selectLoadingStatus } from "./authSlice";
-import { userAdded } from "./usersSlice";
+import { wsClient } from "../../App";
+import { fetchUsers } from "./usersSlice";
 import {
   NavBar,
   WingBlank,
@@ -57,7 +58,10 @@ function Register() {
     if (register.fulfilled.match(resultAction)) {
       // succeed
       const user = unwrapResult(resultAction);
-      dispatch(userAdded(user)); // add new user to users
+      const type = { type: user.type === "employer" ? "employee" : "employer" };
+      await dispatch(fetchUsers(type)); // fetch all users when login
+      const userId = {userId: user._id};
+      wsClient.send(JSON.stringify(userId)); // build TCP connection between client and server for users list updated
       history.push("/");
     } else {
       if (resultAction.payload) {

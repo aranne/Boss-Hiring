@@ -30,7 +30,7 @@ const usersSlice = createSlice({
     error: null,
   }),
   reducers: {
-    userAdded: usersAdapter.addOne,
+    usersUpdated: usersAdapter.upsertMany,
   },
   extraReducers: {
     [fetchUsers.pending]: (state, action) => {
@@ -64,7 +64,7 @@ const usersSlice = createSlice({
 
 export default usersSlice.reducer;
 
-export const { userAdded } = usersSlice.actions;
+export const { usersUpdated } = usersSlice.actions;
 
 export const {
   selectAll: selectAllUsers,

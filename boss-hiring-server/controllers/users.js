@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const User = require("./../models/user");
 const only = require("only");
+const notifyAll = require("../bin/webSocket").notifyAll;
 
 exports.create = async (req, res) => {
   const user = new User(only(req.body, "username password type"));
@@ -8,8 +9,9 @@ exports.create = async (req, res) => {
     const newUser = await user.save();
     const data = only(newUser, "_id username type");
 
-    res.cookie("userid", newUser._id, { maxAge: 1000 * 60 * 60 * 24 });
+    res.cookie("userId", newUser._id, { maxAge: 1000 * 60 * 60 * 24 });
     res.json({ user: data });
+    notifyAll(); // notify all clients for users
   } catch (err) {
     res.status(400).json({ message: "This user already exists" });
   }
@@ -22,48 +24,47 @@ exports.login = async (req, res) => {
     const user = await User.load({ criteria });
     await user.authenticate(password);
     user.password = undefined; // remove password before send json
-
-    res.cookie("userid", user._id, { maxAge: 1000 * 60 * 60 * 24 });
+    res.cookie("userId", user._id, { maxAge: 1000 * 60 * 60 * 24 });
     res.json({ user });
   } catch (err) {
-    res.clearCookie("userid"); // clear userid cookie
+    res.clearCookie("userId"); // clear userId cookie
     res.status(401).json({ message: "Username or Password is not correct" });
   }
 };
 
 exports.update = async (req, res) => {
-  const userid = req.cookies.userid;
+  const userId = req.cookies.userId;
 
-  if (!userid) {
+  if (!userId) {
     return res.status(401).json({ message: "Please login first" });
   }
   const update = req.body;
   try {
-    const oldUser = await User.findOneAndUpdate({ _id: userid }, update);
+    const oldUser = await User.findOneAndUpdate({ _id: userId }, update);
     const user = Object.assign(only(oldUser, "_id username type"), update);
     user.password = undefined; // remove password before send json
-
     res.json({ user });
+    notifyAll(); // notify all clients for users
   } catch (err) {
-    // res.clearCookie("userid"); // clear userid cookie
+    // res.clearCookie("userId"); // clear userId cookie
     res.status(400).json({ message: "Update Error" });
   }
 };
 
 exports.show = async (req, res) => {
-  const userid = req.cookies.userid;
+  const userId = req.cookies.userId;
 
-  if (!userid) {
+  if (!userId) {
     return res.status(401).json({ message: "Please login first" });
   }
 
-  const criteria = { _id: userid };
+  const criteria = { _id: userId };
   const select = { password: 0 };
   try {
     const user = await User.load({ criteria, select });
     res.json({ user });
   } catch (err) {
-    res.clearCookie("userid"); // clear userid cookie
+    res.clearCookie("userId"); // clear userId cookie
     res.status(401).json({ message: "Please login first" });
   }
 };

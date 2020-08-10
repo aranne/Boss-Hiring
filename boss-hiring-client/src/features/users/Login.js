@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, selectLoadingStatus } from "./authSlice";
 import { fetchUsers } from "./usersSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { wsClient } from "../../App";
 import { NavBar, WingBlank, List, InputItem, Button, Toast } from "antd-mobile";
 import Logo from "../../app/logo/logo";
 
@@ -32,6 +33,8 @@ function Login() {
       const user = unwrapResult(resultAction);
       const type = { type: user.type === "employer" ? "employee" : "employer" };
       await dispatch(fetchUsers(type)); // fetch all users when login
+      const userId = {userId: user._id};
+      wsClient.send(JSON.stringify(userId)); // build TCP connection between client and server for users list updated
       history.push(getRedirectPath(user));
     } else {
       if (resultAction.payload) {
