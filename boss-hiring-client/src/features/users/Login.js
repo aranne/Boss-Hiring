@@ -23,13 +23,7 @@ function Login() {
   const canLogin =
     [username, password].every(Boolean) && loadingStatus === "idle";
 
-  const onLoginClick = () => {
-    if (loadingStatus === "idle") {
-      loginRequest();
-    }
-  };
-
-  const loginRequest = async () => {
+  const onLoginClick = async () => {
     // since we use rejectWithValue, we don't need to unwarp the result
     const resultAction = await dispatch(login({ username, password }));
     if (login.fulfilled.match(resultAction)) {

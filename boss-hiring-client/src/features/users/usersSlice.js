@@ -1,3 +1,4 @@
+import { reqAllUsers } from "../../api/userAPI";
 import {
   createEntityAdapter,
   createSlice,
@@ -7,6 +8,11 @@ import {
 const usersAdapter = createEntityAdapter({
   selectId: (user) => user._id,
   sortComparer: (a, b) => a.username.localeCompare(b.username),
+});
+
+const fetchUsers = createAsyncThunk("users/fetchUsers", async (type) => {
+  const response = await reqAllUsers(type);
+  return response.data.users;
 });
 
 const usersSlice = createSlice({
@@ -19,7 +25,11 @@ const usersSlice = createSlice({
   reducers: {
     userAdded: usersAdapter.addOne,
   },
-  extraReducers: {},
+  extraReducers: {
+    [fetchUsers.pending]: (state, action) => {
+      
+    }
+  },
 });
 
 export default usersSlice.reducer;

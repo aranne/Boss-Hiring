@@ -1,14 +1,14 @@
 /**
  * HTTP Request API
  */
-import {client} from './client';
+import { client } from "./client";
 
 /**
  * Register
  * @param {Object} user
  */
 export const reqRegister = (user) => {
-  return client.post('/users/register', user);
+  return client.post("/users/register", user);
 };
 
 /**
@@ -16,7 +16,7 @@ export const reqRegister = (user) => {
  * @param {Object} user
  */
 export const reqLogin = (user) => {
-  return client.post('/users/login', user);
+  return client.post("/users/login", user);
 };
 
 /**
@@ -24,5 +24,13 @@ export const reqLogin = (user) => {
  * @param {Object} user
  */
 export const reqUpdate = (user) => {
-  return client.post('/users/update', user);
+  return client.post("/users/update", user);
+};
+
+/**
+ * Get all users
+ * @param {Object} type type of user [employee/employer] must exist
+ */
+export const reqAllUsers = (type) => {
+  return client.get("/users/userlist", { params: type });
 };

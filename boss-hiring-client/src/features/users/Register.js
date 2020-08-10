@@ -51,19 +51,13 @@ function Register() {
   const canLogin =
     [username, password].every(Boolean) && loadingStatus === "idle";
 
-  const onRegisterClick = () => {
-    if (loadingStatus === "idle") {
-      registerRequest();
-    }
-  };
-
-  const registerRequest = async () => {
+  const onRegisterClick = async () => {
     // since we use rejectWithValue, we don't need to unwarp the result
     const resultAction = await dispatch(register({ username, password, type }));
     if (register.fulfilled.match(resultAction)) {
       // succeed
       const user = unwrapResult(resultAction);
-      dispatch(userAdded(user));                  // add new user to users
+      dispatch(userAdded(user)); // add new user to users
       history.push("/");
     } else {
       if (resultAction.payload) {

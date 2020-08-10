@@ -3,7 +3,10 @@ import { reqRegister, reqLogin } from "../../api/userAPI";
 
 export const register = createAsyncThunk(
   "auth/register",
-  async (user, { rejectWithValue }) => {
+  async (user, { getState, requestId, rejectWithValue }) => {
+    const { loading, currentReqeustId } = getState().auth;
+    if (loading !== "pending" || currentReqeustId !== requestId)
+      return Promise.reject("Try it later");
     try {
       const response = await reqRegister(user);
       return response.data.user;
@@ -18,7 +21,11 @@ export const register = createAsyncThunk(
 
 export const login = createAsyncThunk(
   "auth/login",
-  async (user, { rejectWithValue }) => {
+  async (user, { getState, requestId, rejectWithValue }) => {
+    const { loading, currentReqeustId } = getState().auth;
+    // if its the first request, loading should be 'pending' and request ID should be same
+    if (loading !== "pending" || currentReqeustId !== requestId)
+      return Promise.reject("Try it later");
     try {
       const response = await reqLogin(user);
       return response.data.user;
@@ -36,34 +43,67 @@ const authSlice = createSlice({
   initialState: {
     currentUserId: null,
     loading: "idle",
+    currentReqeustId: undefined,
     error: null,
   },
   reducers: {
     logout: (state) => {
       state.currentUserId = null;
-      state.loading = "idle";
     },
   },
   extraReducers: {
-    [register.pending]: (state) => {
-      state.loading = "pending";
+    [register.pending]: (state, action) => {
+      if (state.loading === "idle") {
+        state.loading = "pending";
+        state.currentReqeustId = action.meta.requestId;
+      }
     },
     [register.fulfilled]: (state, action) => {
-      state.loading = "idle";
-      state.currentUserId = action.payload._id;
+      if (
+        state.loading === "pending" &&
+        state.currentReqeustId === action.meta.requestId
+      ) {
+        state.currentUserId = action.payload._id;
+        state.loading = "idle";
+        state.currentReqeustId = undefined;
+      }
     },
-    [register.rejected]: (state) => {
-      state.loading = "idle";
+    [register.rejected]: (state, action) => {
+      if (
+        state.loading === "pending" &&
+        state.currentReqeustId === action.meta.requestId
+      ) {
+        state.error = action.error;
+        state.loading = "idle";
+        state.currentReqeustId = undefined;
+      }
     },
-    [login.pending]: (state) => {
-      state.loading = "pending";
+    [login.pending]: (state, action) => {
+      // Only change it to 'pending' when we receive the first request and save current request ID
+      if (state.loading === "idle") {
+        state.loading = "pending";
+        state.currentReqeustId = action.meta.requestId;
+      }
     },
     [login.fulfilled]: (state, action) => {
-      state.currentUserId = action.payload._id;
-      state.loading = "idle";
+      if (
+        state.loading === "pending" &&
+        state.currentReqeustId === action.meta.requestId
+      ) {
+        state.currentUserId = action.payload._id;
+        state.loading = "idle";
+        state.currentReqeustId = undefined;
+      }
     },
-    [login.rejected]: (state) => {
-      state.loading = "idle";
+    [login.rejected]: (state, action) => {
+      if (
+        state.loading === "pending" &&
+        state.currentReqeustId === action.meta.requestId
+      ) {
+        state.error = action.error;
+        state.loading = "idle";
+        state.currentReqeustId = undefined;
+      }
     },
   },
 });
