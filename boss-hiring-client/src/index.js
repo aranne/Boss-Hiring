@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 
 import store from "./app/store";
 import App from "./App";
-import httpService from './api/interceptors';
+import httpService from './web/interceptors';
 
 httpService.setupInterceptors(store);           // use http interceptor
 

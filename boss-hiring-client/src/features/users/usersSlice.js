@@ -1,4 +1,4 @@
-import { reqAllUsers } from "../../api/userAPI";
+import { reqAllUsers } from "../../web/userAPI";
 import {
   createEntityAdapter,
   createSlice,
