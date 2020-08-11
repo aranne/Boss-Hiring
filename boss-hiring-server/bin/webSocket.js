@@ -46,7 +46,7 @@ function originIsAllowed(origin) {
  * @param {Type} type the type of clients need to be notified
  */
 exports.notifyAll = async (type) => {
-  const otherType = type === "employer" ? "employee" : "employer";
+  const otherType = type === "recruiter" ? "jobseeker" : "recruiter";
   for (let client in clients) {
     if (clients[client].type !== type) continue;
     try {

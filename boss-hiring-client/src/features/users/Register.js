@@ -22,7 +22,7 @@ const FlexItem = Flex.Item;
 function Register() {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [type, setType] = useState("employer");
+  const [type, setType] = useState("recruiter");
   const [typeStyle1, setTypeStyle1] = useState("primary");
   const [typeStyle2, setTypeStyle2] = useState("");
 
@@ -35,14 +35,14 @@ function Register() {
   const onPasswordChange = (val) => setPassword(val);
 
   const onTypeStyleClick1 = () => {
-    setType("employer");
+    setType("recruiter");
     if (typeStyle1 !== "primary") {
       setTypeStyle1("primary");
       setTypeStyle2("");
     }
   };
   const onTypeStyleClick2 = () => {
-    setType("employee");
+    setType("jobseeker");
     if (typeStyle2 !== "primary") {
       setTypeStyle2("primary");
       setTypeStyle1("");
@@ -58,7 +58,7 @@ function Register() {
     if (register.fulfilled.match(resultAction)) {
       // succeed
       const user = unwrapResult(resultAction);
-      const type = { type: user.type === "employer" ? "employee" : "employer" };
+      const type = { type: user.type === "recruiter" ? "jobseeker" : "recruiter" };
       await dispatch(fetchUsers(type)); // fetch all users when login
       wsClient.send(JSON.stringify({ type: user.type })); // build TCP connection between client and server for users list updated
       history.push("/");
@@ -103,7 +103,7 @@ function Register() {
             <Flex>
               <FlexItem>
                 <Button type={typeStyle1} onClick={onTypeStyleClick1}>
-                  I'm an Employer
+                  I'm a Recruiter
                 </Button>
               </FlexItem>
               <FlexItem>

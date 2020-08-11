@@ -26,7 +26,7 @@ function testSave() {
   const user = new User({
     username: "abc",
     password: "123", 
-    type: "employee",
+    type: "jobseeker",
   });
   user.save((err, user) => {
     if (err) return console.error(err);

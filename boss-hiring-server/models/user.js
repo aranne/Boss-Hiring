@@ -5,7 +5,7 @@ const SALT_WORK_FACTOR = 10;
 const UserSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true }, // 用户名
   password: { type: String, required: true }, // 密码
-  type: { type: String, required: true }, // 用户类型: employer/employee
+  type: { type: String, required: true }, // 用户类型: recruiter/jobseeker
   avatar: { type: String, default: "" }, // 头像
   title: { type: String, default: "" }, // 职位
   info: { type: String, default: "" }, // 个人或职位简介
@@ -31,7 +31,7 @@ UserSchema.pre("findOneAndUpdate", function (next) {
 UserSchema.pre("findOneAndUpdate", async function () {                         // 'this' in Query Middleware refers to Query not Doc!!!
   const user = await this.model.findOne(this.getQuery()).exec(); // this.model refer to User Mode
   const password = this.getUpdate().password;                                  // get to be updated password
-  if (!password) return Promise.resolve();
+  if (!password) return Promise.resolve();                                     // if password is not updated
   user.password = password;
   const hashed_password = await user.encryptPassword();
   this._update.password = hashed_password;                                     // encrypt the password before updating

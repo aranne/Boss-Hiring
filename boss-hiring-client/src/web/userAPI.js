@@ -29,7 +29,7 @@ export const reqUpdateUser = (user) => {
 
 /**
  * Get all users
- * @param {Object} type type of user [employee/employer] must exist
+ * @param {Object} type type of user [recruiter/jobseeker] must exist
  */
 export const reqAllUsers = (type) => {
   return client.get("/users/userlist", { params: type });

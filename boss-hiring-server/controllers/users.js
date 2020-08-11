@@ -11,7 +11,7 @@ exports.create = async (req, res) => {
 
     res.cookie("userId", newUser._id, { maxAge: 1000 * 60 * 60 * 24 });
     res.json({ user: data });
-    const type = data.type === "employer" ? "employee" : "employer";
+    const type = data.type === "recruiter" ? "jobseeker" : "recruiter";
     await notifyAll(type); // notify all clients for users
   } catch (err) {
     res.status(400).json({ message: "This user already exists" });
@@ -48,7 +48,7 @@ exports.update = async (req, res) => {
     );
     newUser.password = undefined; // remove password before send json
     res.json({ user: newUser });
-    const type = newUser.type === "employer" ? "employee" : "employer";
+    const type = newUser.type === "recruiter" ? "jobseeker" : "recruiter";
     await notifyAll(type); // notify all clients for users
   } catch (err) {
     res.clearCookie("userId"); // clear userId cookie

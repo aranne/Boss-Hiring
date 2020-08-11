@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Route, useRouteMatch, Link } from "react-router-dom";
 import AddBossInfoForm from "./users/AddBossInfoForm";
-import AddSeekerInfoForm from './users/AddSeekerInfoForm';
+import AddSeekerInfoForm from './users/AddJobseekerInfoForm';
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "./users/currentUserSlice";
 
@@ -14,7 +14,7 @@ function Main() {
       <Switch>
         {/* Since this is a secondary route, we must retrieve path */}
         <Route path={`${path}/userinfo`}>
-          {user.type === 'employee' ? (
+          {user.type === 'jobseeker' ? (
             <AddSeekerInfoForm />
           ) : (
             <AddBossInfoForm />

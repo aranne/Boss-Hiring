@@ -31,7 +31,7 @@ function Login() {
     if (login.fulfilled.match(resultAction)) {
       // succeed
       const user = unwrapResult(resultAction);
-      const type = { type: user.type === "employer" ? "employee" : "employer" };
+      const type = { type: user.type === "recruiter" ? "jobseeker" : "recruiter" };
       await dispatch(fetchUsers(type)); // fetch all users when login
       wsClient.send(JSON.stringify({ type: user.type })); // build TCP connection between client and server for users list updated
       history.push(getRedirectPath(user));
