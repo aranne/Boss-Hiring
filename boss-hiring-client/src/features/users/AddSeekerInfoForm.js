@@ -7,11 +7,16 @@ import {
   TextareaItem,
   Button,
   Grid,
+  Toast,
 } from "antd-mobile";
 import { useHistory } from "react-router-dom";
+import { updateUser } from "./currentUserSlice";
+import { useDispatch } from "react-redux";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 function AddSeekerInfoForm() {
   const history = useHistory();
+  const dispatch = useDispatch();
   const [avatarList, setAvatarList] = useState([]);
 
   const [avatar, setAvatar] = useState(null);
@@ -40,7 +45,21 @@ function AddSeekerInfoForm() {
     setAvatar(el.icon);
   };
 
-  const onSaveClick = () => {};
+  const onSaveClick = async () => {
+    const data = { avatar, title, info };
+    const resultAction = await dispatch(updateUser(data));
+    if (updateUser.fulfilled.match(resultAction)) {
+      // succeed
+      const user = unwrapResult(resultAction);
+      console.log(user);
+    } else {
+      if (resultAction.payload) {
+        Toast.fail(resultAction.payload.message, 1.5);
+      } else {
+        Toast.fail(resultAction.error.message, 1.5);
+      }
+    }
+  };
 
   const header = !avatar ? (
     "Please choose your avatar"
