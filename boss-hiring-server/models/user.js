@@ -31,6 +31,7 @@ UserSchema.pre("findOneAndUpdate", function (next) {
 UserSchema.pre("findOneAndUpdate", async function () {                         // 'this' in Query Middleware refers to Query not Doc!!!
   const user = await this.model.findOne(this.getQuery()).exec(); // this.model refer to User Mode
   const password = this.getUpdate().password;                                  // get to be updated password
+  if (!password) return Promise.resolve();
   user.password = password;
   const hashed_password = await user.encryptPassword();
   this._update.password = hashed_password;                                     // encrypt the password before updating

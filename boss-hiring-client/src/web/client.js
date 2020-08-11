@@ -19,6 +19,7 @@ export async function client(url, { body, ...customConfig } = {}) {
       ...headers,
       ...customConfig.headers,
     },
+    withCredentials: true,   // CORS request should be made with credentials(cookies)
   };
   if (body) {
     config.data = body;

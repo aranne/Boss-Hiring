@@ -7,11 +7,16 @@ import {
   TextareaItem,
   Button,
   Grid,
+  Toast,
 } from "antd-mobile";
 import { useHistory } from "react-router-dom";
+import { updateUser } from "./currentUserSlice";
+import { useDispatch } from "react-redux";
+import { unwrapResult } from "@reduxjs/toolkit";
 
 function AddBossInfoForm() {
   const history = useHistory();
+  const dispatch = useDispatch();
   const [avatarList, setAvatarList] = useState([]);
 
   const [avatar, setAvatar] = useState(null);
@@ -42,17 +47,31 @@ function AddBossInfoForm() {
 
   const onAvatarClick = (el) => {
     setAvatar(el.icon);
-  }
+  };
 
-  const onSaveClick = () => {
-    
-  }
+  const onSaveClick = async () => {
+    const data = { avatar, title, company, salary, info };
+    const resultAction = await dispatch(updateUser(data));
+    if (updateUser.fulfilled.match(resultAction)) {
+      // succeed
+      const user = unwrapResult(resultAction);
+      console.log(user);
+    } else {
+      if (resultAction.payload) {
+        Toast.fail(resultAction.payload.message, 1.5);
+      } else {
+        Toast.fail(resultAction.error.message, 1.5);
+      }
+    }
+  };
 
-  const header = !avatar ? "Please choose your avatar" : (
+  const header = !avatar ? (
+    "Please choose your avatar"
+  ) : (
     <div>
       {"Selected avatar: "} <img src={avatar} alt="unavailable avatar"></img>
     </div>
-  )
+  );
 
   return (
     <div>
@@ -66,27 +85,48 @@ function AddBossInfoForm() {
       </NavBar>
 
       <List renderHeader={() => header}>
-        <Grid data={avatarList} isCarousel carouselMaxRow={1} onClick={el => onAvatarClick(el)}/>
+        <Grid
+          data={avatarList}
+          isCarousel
+          carouselMaxRow={1}
+          onClick={(el) => onAvatarClick(el)}
+        />
       </List>
       <List renderHeader={() => "What kind of job are you hiring"}>
-        <InputItem placeholder="What is the job title " onChange={val => onTitleChange(val)}>Job Title</InputItem>
-        <InputItem placeholder="What is your company name" onChange={val => onCompanyChange(val)}>Company</InputItem>
+        <InputItem
+          placeholder="What is the job title "
+          onChange={(val) => onTitleChange(val)}
+        >
+          Job Title
+        </InputItem>
+        <InputItem
+          placeholder="What is your company name"
+          onChange={(val) => onCompanyChange(val)}
+        >
+          Company
+        </InputItem>
         <InputItem
           type="money"
           labelNumber={8}
           clear
           placeholder="What is the salary a month"
           extra="$"
-          onChange={val => onSalaryChange(val)}
+          onChange={(val) => onSalaryChange(val)}
         >
           Salary per month
         </InputItem>
       </List>
       <List renderHeader={() => "Job Description"}>
-        <TextareaItem placeholder="Please describe this job more" autoHeight onChange={val => onInfoChange(val)}/>
+        <TextareaItem
+          placeholder="Please describe this job more"
+          autoHeight
+          onChange={(val) => onInfoChange(val)}
+        />
       </List>
       <List>
-        <Button type="primary" onClick={onSaveClick}>Post this job</Button>
+        <Button type="primary" onClick={onSaveClick}>
+          Post this job
+        </Button>
       </List>
     </div>
   );

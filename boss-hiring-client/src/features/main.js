@@ -3,7 +3,7 @@ import { Switch, Route, useRouteMatch, Link } from "react-router-dom";
 import AddBossInfoForm from "./users/AddBossInfoForm";
 import AddSeekerInfoForm from './users/AddSeekerInfoForm';
 import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../features/users/authSlice";
+import { selectCurrentUser } from "./users/currentUserSlice";
 
 function Main() {
   const { path } = useRouteMatch();

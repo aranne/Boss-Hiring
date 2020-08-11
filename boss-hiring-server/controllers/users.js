@@ -39,16 +39,19 @@ exports.update = async (req, res) => {
   if (!userId) {
     return res.status(401).json({ message: "Please login first" });
   }
-  const update = req.body;
+  const userUpdate = req.body;
   try {
-    const oldUser = await User.findOneAndUpdate({ _id: userId }, update);
-    const user = Object.assign(only(oldUser, "_id username type"), update);
-    user.password = undefined; // remove password before send json
-    res.json({ user });
-    const type = user.type === "employer" ? "employee" : "employer";
+    const oldUser = await User.findOneAndUpdate({ _id: userId }, userUpdate);
+    const newUser = Object.assign(
+      only(oldUser, "_id username type"),
+      userUpdate
+    );
+    newUser.password = undefined; // remove password before send json
+    res.json({ user: newUser });
+    const type = newUser.type === "employer" ? "employee" : "employer";
     await notifyAll(type); // notify all clients for users
   } catch (err) {
-    // res.clearCookie("userId"); // clear userId cookie
+    res.clearCookie("userId"); // clear userId cookie
     res.status(400).json({ message: "Update Error" });
   }
 };
@@ -67,7 +70,7 @@ exports.show = async (req, res) => {
     res.json({ user });
   } catch (err) {
     res.clearCookie("userId"); // clear userId cookie
-    res.status(401).json({ message: "Please login first" });
+    res.status(400).json({ message: "Don't exist this user" });
   }
 };
 

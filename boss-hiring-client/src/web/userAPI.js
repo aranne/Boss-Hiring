@@ -23,7 +23,7 @@ export const reqLogin = (user) => {
  * Update
  * @param {Object} user
  */
-export const reqUpdate = (user) => {
+export const reqUpdateUser = (user) => {
   return client.post("/users/update", user);
 };
 

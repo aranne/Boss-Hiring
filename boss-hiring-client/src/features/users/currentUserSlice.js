@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { reqRegister, reqLogin } from "../../web/userAPI";
+import { reqRegister, reqLogin, reqUpdateUser } from "../../web/userAPI";
 
 export const register = createAsyncThunk(
-  "auth/register",
+  "currentUser/register",
   async (user, { getState, requestId, rejectWithValue }) => {
-    const { loading, currentReqeustId } = getState().auth;
+    const { loading, currentReqeustId } = getState().currentUser;
     if (loading !== "pending" || currentReqeustId !== requestId)
       return Promise.reject("Try it later");
     try {
@@ -20,9 +20,9 @@ export const register = createAsyncThunk(
 );
 
 export const login = createAsyncThunk(
-  "auth/login",
+  "currentUser/login",
   async (user, { getState, requestId, rejectWithValue }) => {
-    const { loading, currentReqeustId } = getState().auth;
+    const { loading, currentReqeustId } = getState().currentUser;
     // if its the first request, loading should be 'pending' and request ID should be same
     if (loading !== "pending" || currentReqeustId !== requestId)
       return Promise.reject("Try it later");
@@ -38,8 +38,26 @@ export const login = createAsyncThunk(
   }
 );
 
-const authSlice = createSlice({
-  name: "auth",
+export const updateUser = createAsyncThunk(
+  "currentUser/updateUser",
+  async (user, { getState, requestId, rejectWithValue }) => {
+    const { loading, currentReqeustId } = getState().currentUser;
+    if (loading !== "pending" || currentReqeustId !== requestId)
+      return Promise.reject("Try it later");
+    try {
+      const response = await reqUpdateUser(user);
+      return response.data.user;
+    } catch (err) {
+      if (!err.response) {
+        throw err;
+      }
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+const currentUserSlice = createSlice({
+  name: "currentUser",
   initialState: {
     currentUser: null,
     loading: "idle",
@@ -105,12 +123,38 @@ const authSlice = createSlice({
         state.currentReqeustId = undefined;
       }
     },
+    [updateUser.pending]: (state, action) => {
+      if (state.loading === "idle") {
+        state.loading = "pending";
+        state.currentReqeustId = action.meta.requestId;
+      }
+    },
+    [updateUser.fulfilled]: (state, action) => {
+      if (
+        state.loading === "pending" &&
+        state.currentReqeustId === action.meta.requestId
+      ) {
+        state.currentUser = action.payload;
+        state.loading = "idle";
+        state.currentReqeustId = undefined;
+      }
+    },
+    [updateUser.rejected]: (state, action) => {
+      if (
+        state.loading === "pending" &&
+        state.currentReqeustId === action.meta.requestId
+      ) {
+        state.error = action.error;
+        state.loading = "idle";
+        state.currentReqeustId = undefined;
+      }
+    },
   },
 });
 
-export default authSlice.reducer;
+export default currentUserSlice.reducer;
 
-export const { logout } = authSlice.actions;
+export const { logout } = currentUserSlice.actions;
 
-export const selectCurrentUser = (state) => state.auth.currentUser;
-export const selectLoadingStatus = (state) => state.auth.loading;
+export const selectCurrentUser = (state) => state.currentUser.currentUser;
+export const selectLoadingStatus = (state) => state.currentUser.loading;

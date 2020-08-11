@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { register, selectLoadingStatus } from "./authSlice";
+import { register, selectLoadingStatus } from "./currentUserSlice";
 import { wsClient } from "../../App";
 import { fetchUsers } from "./usersSlice";
 import {

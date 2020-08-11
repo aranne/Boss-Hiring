@@ -14,7 +14,13 @@ var app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
-app.use(cors());
+// CORS options for sending cookies
+var corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials:  true
+}
+
+app.use(cors(corsOptions));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
