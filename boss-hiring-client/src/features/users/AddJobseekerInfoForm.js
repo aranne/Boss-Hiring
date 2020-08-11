@@ -8,10 +8,11 @@ import {
   Button,
   Grid,
   Toast,
+  ActivityIndicator,
 } from "antd-mobile";
 import { useHistory } from "react-router-dom";
-import { updateUser } from "./currentUserSlice";
-import { useDispatch } from "react-redux";
+import { updateUser, selectLoadingStatus } from "./currentUserSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 
 function AddSeekerInfoForm() {
@@ -25,6 +26,8 @@ function AddSeekerInfoForm() {
 
   const onTitleChange = (val) => setTitle(val);
   const onInfoChange = (val) => setInfo(val);
+
+  const loadingStatus = useSelector(selectLoadingStatus);
 
   useEffect(() => {
     let list = [];
@@ -71,6 +74,12 @@ function AddSeekerInfoForm() {
 
   return (
     <div>
+      <List>
+        <ActivityIndicator
+          animating={loadingStatus === "pending"}
+          toast={true}
+        />
+      </List>
       <NavBar
         mode="dark"
         icon={<Icon type="left" />}
@@ -80,16 +89,32 @@ function AddSeekerInfoForm() {
         Boss Hiring
       </NavBar>
       <List renderHeader={() => header}>
-        <Grid data={avatarList} isCarousel carouselMaxRow={1} onClick={el => onAvatarClick(el)}/>
+        <Grid
+          data={avatarList}
+          isCarousel
+          carouselMaxRow={1}
+          onClick={(el) => onAvatarClick(el)}
+        />
       </List>
       <List renderHeader={() => "What kind of job are you seeking"}>
-        <InputItem placeholder="What is the job title " onChange={val => onTitleChange(val)}>Job Title</InputItem>
+        <InputItem
+          placeholder="What is the job title "
+          onChange={(val) => onTitleChange(val)}
+        >
+          Job Title
+        </InputItem>
       </List>
       <List renderHeader={() => "Self Introduction"}>
-        <TextareaItem placeholder="Please introduce yourself" autoHeight onChange={val => onInfoChange(val)}/>
+        <TextareaItem
+          placeholder="Please introduce yourself"
+          autoHeight
+          onChange={(val) => onInfoChange(val)}
+        />
       </List>
       <List>
-        <Button type="primary" onClick={onSaveClick}>Save</Button>
+        <Button type="primary" onClick={onSaveClick}>
+          Save
+        </Button>
       </List>
     </div>
   );

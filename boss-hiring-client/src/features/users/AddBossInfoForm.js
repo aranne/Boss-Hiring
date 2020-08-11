@@ -8,10 +8,11 @@ import {
   Button,
   Grid,
   Toast,
+  ActivityIndicator,
 } from "antd-mobile";
 import { useHistory } from "react-router-dom";
-import { updateUser } from "./currentUserSlice";
-import { useDispatch } from "react-redux";
+import { updateUser, selectLoadingStatus } from "./currentUserSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 
 function AddBossInfoForm() {
@@ -29,6 +30,8 @@ function AddBossInfoForm() {
   const onCompanyChange = (val) => setCompany(val);
   const onSalaryChange = (val) => setSalary(val);
   const onInfoChange = (val) => setInfo(val);
+
+  const loadingStatus = useSelector(selectLoadingStatus);
 
   useEffect(() => {
     let list = [];
@@ -75,6 +78,12 @@ function AddBossInfoForm() {
 
   return (
     <div>
+      <List>
+        <ActivityIndicator
+          animating={loadingStatus === "pending"}
+          toast={true}
+        />
+      </List>
       <NavBar
         mode="dark"
         icon={<Icon type="left" />}
