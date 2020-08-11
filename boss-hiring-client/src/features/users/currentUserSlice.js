@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { reqRegister, reqLogin, reqUpdateUser } from "../../web/userAPI";
+import { reqRegister, reqLogin, reqUpdateUser, reqFetchUser } from "../../web/userAPI";
 
 export const register = createAsyncThunk(
   "currentUser/register",
@@ -46,6 +46,24 @@ export const updateUser = createAsyncThunk(
       return Promise.reject("Try it later");
     try {
       const response = await reqUpdateUser(user);
+      return response.data.user;
+    } catch (err) {
+      if (!err.response) {
+        throw err;
+      }
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const fetchCurrentUser = createAsyncThunk(
+  "currentUser/fetchCurrentUser",
+  async (userId, { getState, requestId, rejectWithValue }) => {
+    const { loading, currentReqeustId } = getState().currentUser;
+    if (loading !== "pending" || currentReqeustId !== requestId)
+      return Promise.reject("Try it later");
+    try {
+      const response = await reqFetchUser();
       return response.data.user;
     } catch (err) {
       if (!err.response) {
@@ -140,6 +158,32 @@ const currentUserSlice = createSlice({
       }
     },
     [updateUser.rejected]: (state, action) => {
+      if (
+        state.loading === "pending" &&
+        state.currentReqeustId === action.meta.requestId
+      ) {
+        state.error = action.error;
+        state.loading = "idle";
+        state.currentReqeustId = undefined;
+      }
+    },
+    [fetchCurrentUser.pending]: (state, action) => {
+      if (state.loading === "idle") {
+        state.loading = "pending";
+        state.currentReqeustId = action.meta.requestId;
+      }
+    },
+    [fetchCurrentUser.fulfilled]: (state, action) => {
+      if (
+        state.loading === "pending" &&
+        state.currentReqeustId === action.meta.requestId
+      ) {
+        state.currentUser = action.payload;
+        state.loading = "idle";
+        state.currentReqeustId = undefined;
+      }
+    },
+    [fetchCurrentUser.rejected]: (state, action) => {
       if (
         state.loading === "pending" &&
         state.currentReqeustId === action.meta.requestId

@@ -34,3 +34,10 @@ export const reqUpdateUser = (user) => {
 export const reqAllUsers = (type) => {
   return client.get("/users/userlist", { params: type });
 };
+
+/**
+ * Fetch current user by id in cookies
+ */
+export const reqFetchUser = () => {
+  return client.get("/users/user");
+};

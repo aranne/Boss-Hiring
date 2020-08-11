@@ -6,11 +6,11 @@ import { useSelector } from "react-redux";
 import { selectCurrentUser } from "./users/currentUserSlice";
 
 function Main() {
-  const { path } = useRouteMatch();
+  const { path, url } = useRouteMatch();
   const user = useSelector(selectCurrentUser);
   return (
     <div>
-      <Link to={`${path}/userinfo`}>User Info</Link>
+      <Link to={`${url}/userinfo`}>User Info</Link>
       <Switch>
         {/* Since this is a secondary route, we must retrieve path */}
         <Route path={`${path}/userinfo`}>
