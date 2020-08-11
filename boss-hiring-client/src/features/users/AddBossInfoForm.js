@@ -20,7 +20,6 @@ function AddBossInfoForm() {
   const [salary, setSalary] = useState("");
   const [info, setInfo] = useState("");
 
-  const onAvatarChange = (val) => setAvatar(val);
   const onTitleChange = (val) => setTitle(val);
   const onCompanyChange = (val) => setCompany(val);
   const onSalaryChange = (val) => setSalary(val);
@@ -46,12 +45,12 @@ function AddBossInfoForm() {
   }
 
   const onSaveClick = () => {
-
+    
   }
 
   const header = !avatar ? "Please choose your avatar" : (
     <div>
-      {"Selected avatar: "} <img src={avatar}></img>
+      {"Selected avatar: "} <img src={avatar} alt="unavailable avatar"></img>
     </div>
   )
 

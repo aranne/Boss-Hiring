@@ -14,6 +14,13 @@ function AddSeekerInfoForm() {
   const history = useHistory();
   const [avatarList, setAvatarList] = useState([]);
 
+  const [avatar, setAvatar] = useState(null);
+  const [title, setTitle] = useState("");
+  const [info, setInfo] = useState("");
+
+  const onTitleChange = (val) => setTitle(val);
+  const onInfoChange = (val) => setInfo(val);
+
   useEffect(() => {
     let list = [];
     for (let i = 1; i <= 20; i++) {
@@ -29,6 +36,20 @@ function AddSeekerInfoForm() {
     history.push("/");
   };
 
+  const onAvatarClick = (el) => {
+    setAvatar(el.icon);
+  };
+
+  const onSaveClick = () => {};
+
+  const header = !avatar ? (
+    "Please choose your avatar"
+  ) : (
+    <div>
+      {"Selected avatar: "} <img src={avatar} alt="unavailable avatar"></img>
+    </div>
+  );
+
   return (
     <div>
       <NavBar
@@ -39,17 +60,17 @@ function AddSeekerInfoForm() {
       >
         Boss Hiring
       </NavBar>
-      <List renderHeader={() => "Please choose your avatar"}>
-        <Grid data={avatarList}  isCarousel carouselMaxRow={1}/>
+      <List renderHeader={() => header}>
+        <Grid data={avatarList} isCarousel carouselMaxRow={1} onClick={el => onAvatarClick(el)}/>
       </List>
       <List renderHeader={() => "What kind of job are you seeking"}>
-        <InputItem placeholder="What is the job title ">Job Title</InputItem>
+        <InputItem placeholder="What is the job title " onChange={val => onTitleChange(val)}>Job Title</InputItem>
       </List>
       <List renderHeader={() => "Self Introduction"}>
-        <TextareaItem placeholder="Please introduce yourself" autoHeight />
+        <TextareaItem placeholder="Please introduce yourself" autoHeight onChange={val => onInfoChange(val)}/>
       </List>
       <List>
-        <Button type="primary">Save</Button>
+        <Button type="primary" onClick={onSaveClick}>Save</Button>
       </List>
     </div>
   );
