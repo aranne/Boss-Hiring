@@ -37,7 +37,7 @@ function AddBossInfoForm() {
     let list = [];
     for (let i = 1; i <= 20; i++) {
       list.push({
-        icon: require(`../../assets/images/avatars/avatar${i}.png`), // cannot use import
+        icon: require(`../../app/images/avatars/avatar${i}.png`), // cannot use import
         text: "avatar" + i,
       });
     }

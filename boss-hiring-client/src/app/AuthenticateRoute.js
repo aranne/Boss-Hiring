@@ -10,7 +10,7 @@ import { fetchUsers, usersUpdated } from "../features/users/usersSlice";
 import { Toast } from "antd-mobile";
 import Cookies from "js-cookie";
 import { w3cwebsocket } from "websocket";
-import { wsSeverConfig } from "../config";
+import { wsSeverConfig } from "./config";
 
 export let wsClient = new w3cwebsocket(
   wsSeverConfig.url,
