@@ -5,7 +5,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import {
   selectCurrentUser,
   fetchCurrentUser,
-} from "../features/users/currentUserSlice";
+} from "../features/users/currentUser/currentUserSlice";
 import { fetchUsers, usersUpdated } from "../features/users/usersSlice";
 import { Toast } from "antd-mobile";
 import Cookies from "js-cookie";

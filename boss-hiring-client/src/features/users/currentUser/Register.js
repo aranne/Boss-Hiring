@@ -3,8 +3,8 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { register, selectLoadingStatus } from "./currentUserSlice";
-import { wsClient } from "../../app/AuthenticateRoute";
-import { fetchUsers } from "./usersSlice";
+import { wsClient } from "../../../app/AuthenticateRoute";
+import { fetchUsers } from "../usersSlice";
 import {
   NavBar,
   WingBlank,
@@ -14,7 +14,8 @@ import {
   Flex,
   Toast,
 } from "antd-mobile";
-import Logo from "../../app/logo/logo";
+import Logo from "../../../app/logo/logo";
+import "./auth.less";
 
 const ListItem = List.Item;
 const FlexItem = Flex.Item;
@@ -82,7 +83,7 @@ function Register() {
     <div>
       <NavBar>BOSS HIRING</NavBar>
       <Logo />
-      <WingBlank size="lg">
+      <WingBlank className="login-list" size="lg">
         <List>
           <ListItem>
             <InputItem

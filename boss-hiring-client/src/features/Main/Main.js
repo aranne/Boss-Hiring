@@ -1,14 +1,14 @@
 import React from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
-import AddUserInfoForm from "./users/AddUserInfoForm";
+import AddUserInfoForm from "../users/currentUser/AddUserInfoForm";
 import { useSelector } from "react-redux";
 import { NavBar } from "antd-mobile";
-import { selectCurrentUser } from "./users/currentUserSlice";
-import UserInfo from "./users/UserInfo";
-import UserList from "./users/UserList";
-import MessageList from "./messages/MessageList";
-import NotFind from "../app/NotFind";
-import NavFooter from "../app/NavFooter/NavFooter";
+import { selectCurrentUser } from "../users/currentUser/currentUserSlice";
+import UserInfo from "../users/currentUser/UserInfo";
+import UserList from "../users/UsersList";
+import MessageList from "./../messages/MessageList";
+import NotFind from "../../app/NotFind";
+import NavFooter from "../../app/NavFooter/NavFooter";
 
 const navList = [
   {

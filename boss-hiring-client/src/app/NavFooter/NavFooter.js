@@ -2,15 +2,15 @@ import React from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import { selectCurrentUser } from "../../features/users/currentUserSlice";
+import { selectCurrentUser } from "../../features/users/currentUser/currentUserSlice";
 import { TabBar } from "antd-mobile";
 import "./navFooter.less";
 
-NavFooter.propTypes = {
-  navList: PropTypes.array.isRequired,
-};
+const NavFooter = (props) => {
+  NavFooter.propTypes = {
+    navList: PropTypes.array.isRequired,
+  };
 
-export default function NavFooter(props) {
   const navList = props.navList;
   const location = useLocation();
   const history = useHistory();
@@ -65,3 +65,5 @@ export default function NavFooter(props) {
     </div>
   );
 }
+
+export default NavFooter;

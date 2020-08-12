@@ -2,11 +2,20 @@ import React, { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login, selectLoadingStatus } from "./currentUserSlice";
-import { fetchUsers } from "./usersSlice";
+import { fetchUsers } from "../usersSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { wsClient } from "../../app/AuthenticateRoute";
-import { NavBar, WingBlank, List, InputItem, Button, Toast } from "antd-mobile";
-import Logo from "../../app/logo/logo";
+import { wsClient } from "../../../app/AuthenticateRoute";
+import {
+  NavBar,
+  WingBlank,
+  List,
+  InputItem,
+  Button,
+  Toast,
+  WhiteSpace,
+} from "antd-mobile";
+import Logo from "../../../app/logo/logo";
+import "./auth.less";
 
 const ListItem = List.Item;
 
@@ -72,7 +81,7 @@ function Login() {
     <div>
       <NavBar>BOSS HIRING</NavBar>
       <Logo />
-      <WingBlank size="lg">
+      <WingBlank className="login-list" size="lg">
         <List>
           <ListItem>
             <InputItem

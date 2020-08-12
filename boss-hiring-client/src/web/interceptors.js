@@ -1,5 +1,5 @@
 import axios from "axios";
-import { logout } from "../features/users/currentUserSlice";
+import { logout } from "../features/users/currentUser/currentUserSlice";
 
 const httpService = {
   setupInterceptors: (store) => {
