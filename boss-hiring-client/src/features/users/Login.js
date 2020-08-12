@@ -39,9 +39,11 @@ function Login() {
       // build TCP connection between client and server for users list updated
       wsClient.send(JSON.stringify({ type: user.type }));
       // login page may be from 'redirect to=a from=b'
-      let { from } = location.state || {
-        from: { pathname: getRedirectPath(user) },
-      };
+      const path = getRedirectPath(user);
+      let { from } =
+        path === "/"
+          ? location.state || { from: { pathname: path } }
+          : { from: { pathname: path } };
       history.replace(from);
     } else {
       if (resultAction.payload) {
