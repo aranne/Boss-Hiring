@@ -24,6 +24,8 @@ exports.wsSocketListen = (wsSever) => {
         // new client
         if ("type" in obj) {
           clients[clientId] = { connection: connection, type: obj.type };
+          console.log("Add new client: " + clientId);
+          console.log("Clients number: " + Object.keys(clients).length);
         }
       }
     });
@@ -32,6 +34,8 @@ exports.wsSocketListen = (wsSever) => {
         new Date() + " Peer " + connection.remoteAddress + " disconnected."
       );
       delete clients[clientId]; // don't forget delete client
+      console.log("Delete client: " + clientId);
+      console.log("Left clients number: " + Object.keys(clients).length);
     });
   });
 };

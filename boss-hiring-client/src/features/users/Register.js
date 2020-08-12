@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { register, selectLoadingStatus } from "./currentUserSlice";
-import { wsClient } from "../../App";
+import { wsClient } from "../../app/AuthenticateRoute";
 import { fetchUsers } from "./usersSlice";
 import {
   NavBar,
@@ -58,9 +58,12 @@ function Register() {
     if (register.fulfilled.match(resultAction)) {
       // succeed
       const user = unwrapResult(resultAction);
-      const type = { type: user.type === "recruiter" ? "jobseeker" : "recruiter" };
+      const type = {
+        type: user.type === "recruiter" ? "jobseeker" : "recruiter",
+      };
       await dispatch(fetchUsers(type)); // fetch all users when login
-      wsClient.send(JSON.stringify({ type: user.type })); // build TCP connection between client and server for users list updated
+      // build TCP connection between client and server for users list updated
+      wsClient.send(JSON.stringify({ type: user.type }));
       history.push("/");
     } else {
       if (resultAction.payload) {

@@ -4,12 +4,6 @@ import Login from "./features/users/Login";
 import Register from "./features/users/Register";
 import Main from "./features/Main";
 import AuthenticateRoute from "./app/AuthenticateRoute";
-import { w3cwebsocket } from "websocket";
-
-export const wsClient = new w3cwebsocket(
-  "ws://localhost:8000/",
-  "echo-protocol"
-);
 
 function App() {
   return (

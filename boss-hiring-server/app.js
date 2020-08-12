@@ -15,8 +15,9 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
 // CORS options for sending cookies
+const clientUrl = require('./config').clientConfig.url;
 var corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: clientUrl,
   credentials:  true
 }
 
@@ -24,7 +25,7 @@ app.use(cors(corsOptions));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser());      // parse cookies
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);

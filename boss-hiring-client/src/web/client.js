@@ -1,7 +1,7 @@
 import axios from "axios";
+import { serverConfig } from "../app/config";
 
-const baseURL = "http://localhost:4000";
-
+const baseURL = serverConfig.url;
 /**
  *
  * @param {String} url
@@ -19,7 +19,7 @@ export async function client(url, { body, ...customConfig } = {}) {
       ...headers,
       ...customConfig.headers,
     },
-    withCredentials: true,   // CORS request should be made with credentials(cookies)
+    withCredentials: true, // CORS request should be made with credentials(cookies)
   };
   if (body) {
     config.data = body;

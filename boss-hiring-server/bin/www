@@ -25,23 +25,23 @@ var server1 = http.createServer();
 /**
  * Set up web socket server
  */
-const webSocketSeverPort = 8000;
+const webSocketSeverPort = require('../config').wsServerConfig.port;
 const webSocketSever = require("websocket").server;
 server1.listen(webSocketSeverPort);
 const wsSever = new webSocketSever({
   httpServer: server1,
 });
 
-const wsSocketListen = require('./webSocket').wsSocketListen;
+const wsSocketListen = require("./webSocket").wsSocketListen;
 wsSocketListen(wsSever);
-
 
 var server2 = http.createServer(app);
 
 /**
  * Connect to MongoDB
  */
-connectDB();
+const dbUrl = require("../config").dbConfig.url;
+connectDB(dbUrl);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -112,7 +112,7 @@ function onListening() {
  * Connect to MongoDB
  */
 
-function connectDB() {
+function connectDB(url) {
   mongoose.connection
     .on("error", console.error.bind(console, "connection error:"))
     .on("disconnected", connectDB)
@@ -120,7 +120,7 @@ function connectDB() {
       console.log("db connection opens");
       listenOnServer();
     });
-  return mongoose.connect("mongodb://localhost:27017/boss-hiring", {
+  return mongoose.connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });

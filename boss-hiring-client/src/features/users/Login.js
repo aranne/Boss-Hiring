@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login, selectLoadingStatus } from "./currentUserSlice";
 import { fetchUsers } from "./usersSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { wsClient } from "../../App";
+import { wsClient } from "../../app/AuthenticateRoute";
 import { NavBar, WingBlank, List, InputItem, Button, Toast } from "antd-mobile";
 import Logo from "../../app/logo/logo";
 
@@ -36,7 +36,8 @@ function Login() {
         type: user.type === "recruiter" ? "jobseeker" : "recruiter",
       };
       await dispatch(fetchUsers(type)); // fetch all users when login
-      wsClient.send(JSON.stringify({ type: user.type })); // build TCP connection between client and server for users list updated
+      // build TCP connection between client and server for users list updated
+      wsClient.send(JSON.stringify({ type: user.type }));
       // login page may be from 'redirect to=a from=b'
       let { from } = location.state || {
         from: { pathname: getRedirectPath(user) },
