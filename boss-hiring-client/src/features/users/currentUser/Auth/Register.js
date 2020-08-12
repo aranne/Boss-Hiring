@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { register, selectLoadingStatus } from "./currentUserSlice";
-import { wsClient } from "../../../app/AuthenticateRoute";
-import { fetchUsers } from "../usersSlice";
+import { register, selectLoadingStatus } from "./../currentUserSlice";
+import { wsClient } from "../../../../app/AuthenticateRoute";
+import { fetchUsers } from "../../usersSlice";
 import {
   NavBar,
   WingBlank,
@@ -14,7 +14,7 @@ import {
   Flex,
   Toast,
 } from "antd-mobile";
-import Logo from "../../../app/logo/logo";
+import Logo from "../../../../app/logo/logo";
 import "./auth.less";
 
 const ListItem = List.Item;

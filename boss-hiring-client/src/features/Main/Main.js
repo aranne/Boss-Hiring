@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
-import AddUserInfoForm from "../users/currentUser/AddUserInfoForm";
+import AddUserInfoForm from "../users/currentUser/AddUserInfoForm/AddUserInfoForm";
 import { useSelector } from "react-redux";
 import { NavBar } from "antd-mobile";
 import { selectCurrentUser } from "../users/currentUser/currentUserSlice";

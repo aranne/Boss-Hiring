@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
-import Login from "./features/users/currentUser/Login";
-import Register from "./features/users/currentUser/Register";
+import Login from "./features/users/currentUser/Auth/Login";
+import Register from "./features/users/currentUser/Auth/Register";
 import Main from "./features/Main/Main";
 import AuthenticateRoute from "./app/AuthenticateRoute";
 

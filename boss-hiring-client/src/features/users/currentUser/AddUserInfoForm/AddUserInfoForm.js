@@ -15,9 +15,10 @@ import {
   updateUser,
   selectLoadingStatus,
   selectCurrentUser,
-} from "./currentUserSlice";
+} from "./../currentUserSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
+import "./addUserInfoForm.less";
 
 function AddBossInfoForm() {
   const history = useHistory();
@@ -42,8 +43,7 @@ function AddBossInfoForm() {
     let list = [];
     for (let i = 1; i <= 20; i++) {
       list.push({
-        icon: require(`./../avatars/avatar${i}.png`), // cannot use import
-        text: "avatar" + i,
+        icon: require(`./../../avatars/avatar${i}.png`), // cannot use import
       });
     }
     setAvatarList(list);
@@ -96,7 +96,7 @@ function AddBossInfoForm() {
   const buttonText = user.type === "recruiter" ? "Post this job" : "Save";
 
   return (
-    <div>
+    <div className="user-info-form">
       <List>
         <ActivityIndicator
           animating={loadingStatus === "pending"}
@@ -114,9 +114,10 @@ function AddBossInfoForm() {
 
       <List renderHeader={() => avatarHeader}>
         <Grid
+          itemStyle={{height: "auto"}}
           data={avatarList}
+          carouselMaxRow={2}
           isCarousel
-          carouselMaxRow={1}
           onClick={(el) => onAvatarClick(el)}
         />
       </List>

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login, selectLoadingStatus } from "./currentUserSlice";
-import { fetchUsers } from "../usersSlice";
+import { login, selectLoadingStatus } from "./../currentUserSlice";
+import { fetchUsers } from "../../usersSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { wsClient } from "../../../app/AuthenticateRoute";
+import { wsClient } from "../../../../app/AuthenticateRoute";
 import {
   NavBar,
   WingBlank,
@@ -12,9 +12,8 @@ import {
   InputItem,
   Button,
   Toast,
-  WhiteSpace,
 } from "antd-mobile";
-import Logo from "../../../app/logo/logo";
+import Logo from "../../../../app/logo/logo";
 import "./auth.less";
 
 const ListItem = List.Item;
