@@ -4,11 +4,12 @@ import AddUserInfoForm from "../users/currentUser/AddUserInfoForm/AddUserInfoFor
 import { useSelector } from "react-redux";
 import { NavBar } from "antd-mobile";
 import { selectCurrentUser } from "../users/currentUser/currentUserSlice";
-import UserInfo from "../users/currentUser/UserInfo";
-import UserList from "../users/UsersList";
+import UserInfo from "../users/currentUser/UserInfo/UserInfo";
+import UserList from "../users/UsersList/UsersList";
 import MessageList from "./../messages/MessageList";
 import NotFind from "../../app/NotFind";
 import NavFooter from "../../app/NavFooter/NavFooter";
+import "./Main.less";
 
 const navList = [
   {
@@ -60,7 +61,7 @@ function Main() {
   else currentNav = null;
 
   return (
-    <div>
+    <div className="main-page">
       {currentNav ? (
         <NavBar className="sticky-header">
           {matchUserList
@@ -75,7 +76,7 @@ function Main() {
         {/* Since this is a secondary route, we must retrieve path */}
         {navList.map((nav, id) => (
           <Route key={id} exact path={`${path}${nav.path}`}>
-            {nav.children}
+            <nav.children />
           </Route>
         ))}
         <Route exact path={`${path}/userinfo`}>

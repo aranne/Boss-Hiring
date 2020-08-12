@@ -17,7 +17,7 @@ const NavFooter = (props) => {
   const user = useSelector(selectCurrentUser);
 
   return (
-    <div>
+    <div className="nav-footer">
       <TabBar
         unselectedTintColor="#949494"
         tintColor="#33A3F4"
