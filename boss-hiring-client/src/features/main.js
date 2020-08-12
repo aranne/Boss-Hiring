@@ -1,26 +1,95 @@
 import React from "react";
-import { Switch, Route, useRouteMatch, Link } from "react-router-dom";
+import { Switch, Route, useRouteMatch } from "react-router-dom";
 import AddBossInfoForm from "./users/AddBossInfoForm";
-import AddSeekerInfoForm from './users/AddJobseekerInfoForm';
+import AddSeekerInfoForm from "./users/AddJobseekerInfoForm";
 import { useSelector } from "react-redux";
+import { NavBar } from "antd-mobile";
 import { selectCurrentUser } from "./users/currentUserSlice";
+import UserInfo from "./users/UserInfo";
+import UserList from "./users/UserList";
+import MessageList from "./messages/MessageList";
+import NotFind from "../app/NotFind";
+import NavFooter from "../app/NavFooter/NavFooter";
+
+const navList = [
+  {
+    path: "",
+    children: UserList,
+    icon: "Users",
+    key: "users",
+  },
+  {
+    path: "/message",
+    children: MessageList,
+    title: 'Chats',
+    icon: "Chats",
+    key: "message",
+  },
+  {
+    path: "/user",
+    children: UserInfo,
+    title: 'Settings',
+    icon: "Personal",
+    key: "personal",
+  },
+];
 
 function Main() {
-  const { path, url } = useRouteMatch();
+  const { path } = useRouteMatch();
   const user = useSelector(selectCurrentUser);
+
+  const matchUserList = useRouteMatch({
+    path: `${path}${navList[0].path}`,
+    exact: true,
+    sensitive: true,
+  });
+  const matchMessageList = useRouteMatch({
+    path: `${path}${navList[1].path}`,
+    exact: true,
+    sensitive: true,
+  });
+  const matchUserInfo = useRouteMatch({
+    path: `${path}${navList[2].path}`,
+    exact: true,
+    sensitive: true,
+  });
+
+  let currentNav = null;
+  if (matchUserList) currentNav = navList[0];
+    else if (matchMessageList) currentNav = navList[1];
+    else if (matchUserInfo) currentNav = navList[2];
+    else currentNav = null;
+
   return (
     <div>
-      <Link to={`${url}/userinfo`}>User Info</Link>
+      {currentNav ? (
+        <NavBar className="sticky-header">
+          {matchUserList ? (user.type === "recruiter" ? "Job Seekers" : "Recruiters") : currentNav.title}
+        </NavBar>
+      ) : null}
+      {/* Since this is a secondary route, we must retrieve path */}
       <Switch>
         {/* Since this is a secondary route, we must retrieve path */}
-        <Route path={`${path}/userinfo`}>
-          {user.type === 'jobseeker' ? (
+        {navList.map((nav, id) => (
+          <Route key={id} exact path={`${path}${nav.path}`}>
+            {nav.children}
+          </Route>
+        ))}
+        <Route exact path={`${path}/userinfo`}>
+          {user.type === "jobseeker" ? (
             <AddSeekerInfoForm />
           ) : (
             <AddBossInfoForm />
           )}
         </Route>
+        <Route>
+          <NotFind />
+        </Route>
       </Switch>
+
+      {currentNav ? (
+        <NavFooter navList={navList} />
+      ) : null}
     </div>
   );
 }
