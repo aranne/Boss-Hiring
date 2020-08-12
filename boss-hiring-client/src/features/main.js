@@ -1,7 +1,6 @@
 import React from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
-import AddBossInfoForm from "./users/AddBossInfoForm";
-import AddSeekerInfoForm from "./users/AddJobseekerInfoForm";
+import AddUserInfoForm from "./users/AddUserInfoForm";
 import { useSelector } from "react-redux";
 import { NavBar } from "antd-mobile";
 import { selectCurrentUser } from "./users/currentUserSlice";
@@ -21,14 +20,14 @@ const navList = [
   {
     path: "/message",
     children: MessageList,
-    title: 'Chats',
+    title: "Chats",
     icon: "Chats",
     key: "message",
   },
   {
     path: "/user",
     children: UserInfo,
-    title: 'Settings',
+    title: "Personal Ceter",
     icon: "Personal",
     key: "personal",
   },
@@ -56,15 +55,19 @@ function Main() {
 
   let currentNav = null;
   if (matchUserList) currentNav = navList[0];
-    else if (matchMessageList) currentNav = navList[1];
-    else if (matchUserInfo) currentNav = navList[2];
-    else currentNav = null;
+  else if (matchMessageList) currentNav = navList[1];
+  else if (matchUserInfo) currentNav = navList[2];
+  else currentNav = null;
 
   return (
     <div>
       {currentNav ? (
         <NavBar className="sticky-header">
-          {matchUserList ? (user.type === "recruiter" ? "Job Seekers" : "Recruiters") : currentNav.title}
+          {matchUserList
+            ? user.type === "recruiter"
+              ? "Job Seekers"
+              : "Recruiters"
+            : currentNav.title}
         </NavBar>
       ) : null}
       {/* Since this is a secondary route, we must retrieve path */}
@@ -76,20 +79,14 @@ function Main() {
           </Route>
         ))}
         <Route exact path={`${path}/userinfo`}>
-          {user.type === "jobseeker" ? (
-            <AddSeekerInfoForm />
-          ) : (
-            <AddBossInfoForm />
-          )}
+          <AddUserInfoForm />
         </Route>
         <Route>
           <NotFind />
         </Route>
       </Switch>
 
-      {currentNav ? (
-        <NavFooter navList={navList} />
-      ) : null}
+      {currentNav ? <NavFooter navList={navList} /> : null}
     </div>
   );
 }

@@ -30,7 +30,7 @@ export default function NavFooter(props) {
                 ? user.type === "recruiter"
                   ? "Job Seekers"
                   : "Recruiters"
-                : nav.title
+                : nav.icon
             }
             key={nav.key}
             icon={{

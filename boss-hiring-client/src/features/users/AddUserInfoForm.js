@@ -11,16 +11,21 @@ import {
   ActivityIndicator,
 } from "antd-mobile";
 import { useHistory } from "react-router-dom";
-import { updateUser, selectLoadingStatus } from "./currentUserSlice";
+import {
+  updateUser,
+  selectLoadingStatus,
+  selectCurrentUser,
+} from "./currentUserSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 
 function AddBossInfoForm() {
   const history = useHistory();
   const dispatch = useDispatch();
+  const user = useSelector(selectCurrentUser);
   const [avatarList, setAvatarList] = useState([]);
 
-  const [avatar, setAvatar] = useState(null);
+  const [avatar, setAvatar] = useState("");
   const [title, setTitle] = useState("");
   const [company, setCompany] = useState("");
   const [salary, setSalary] = useState("");
@@ -57,8 +62,8 @@ function AddBossInfoForm() {
     const resultAction = await dispatch(updateUser(data));
     if (updateUser.fulfilled.match(resultAction)) {
       // succeed
-      const user = unwrapResult(resultAction);
-      console.log(user);
+      const newUser = unwrapResult(resultAction);
+      console.log(newUser);
     } else {
       if (resultAction.payload) {
         Toast.fail(resultAction.payload.message, 1.5);
@@ -68,13 +73,27 @@ function AddBossInfoForm() {
     }
   };
 
-  const header = !avatar ? (
+  const header =
+    user.type === "recruiter"
+      ? "What kind of job are you offering"
+      : "What kind of job are you seeking";
+
+  const avatarHeader = !avatar ? (
     "Please choose your avatar"
   ) : (
     <div>
-      {"Selected avatar: "} <img src={avatar} alt="unavailable avatar"></img>
+      <img src={avatar} alt="unavailable avatar"></img>
     </div>
   );
+
+  const description =
+    user.type === "recruiter" ? "Job Description" : "Self Introduction";
+  const descriptionPlaceholder =
+    user.type === "recruiter"
+      ? "Please describe this job more"
+      : "Please introduce yourself";
+
+  const buttonText = user.type === "recruiter" ? "Post this job" : "Save";
 
   return (
     <div>
@@ -93,7 +112,7 @@ function AddBossInfoForm() {
         Boss Hiring
       </NavBar>
 
-      <List renderHeader={() => header}>
+      <List renderHeader={() => avatarHeader}>
         <Grid
           data={avatarList}
           isCarousel
@@ -101,40 +120,45 @@ function AddBossInfoForm() {
           onClick={(el) => onAvatarClick(el)}
         />
       </List>
-      <List renderHeader={() => "What kind of job are you hiring"}>
+      <List renderHeader={() => header}>
         <InputItem
           placeholder="What is the job title "
           onChange={(val) => onTitleChange(val)}
         >
           Job Title
         </InputItem>
-        <InputItem
-          placeholder="What is your company name"
-          onChange={(val) => onCompanyChange(val)}
-        >
-          Company
-        </InputItem>
-        <InputItem
-          type="money"
-          labelNumber={8}
-          clear
-          placeholder="What is the salary a month"
-          extra="$"
-          onChange={(val) => onSalaryChange(val)}
-        >
-          Salary per month
-        </InputItem>
+        {user.type === "recruiter" ? (
+          <InputItem
+            placeholder="What is your company name"
+            onChange={(val) => onCompanyChange(val)}
+          >
+            Company
+          </InputItem>
+        ) : null}
+
+        {user.type === "recruiter" ? (
+          <InputItem
+            type="money"
+            labelNumber={8}
+            clear
+            placeholder="What is the salary a month"
+            extra="$"
+            onChange={(val) => onSalaryChange(val)}
+          >
+            Salary per month
+          </InputItem>
+        ) : null}
       </List>
-      <List renderHeader={() => "Job Description"}>
+      <List renderHeader={() => description}>
         <TextareaItem
-          placeholder="Please describe this job more"
+          placeholder={descriptionPlaceholder}
           autoHeight
           onChange={(val) => onInfoChange(val)}
         />
       </List>
       <List>
         <Button type="primary" onClick={onSaveClick}>
-          Post this job
+          {buttonText}
         </Button>
       </List>
     </div>
