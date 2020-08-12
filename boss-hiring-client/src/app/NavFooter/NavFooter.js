@@ -24,7 +24,7 @@ export default function NavFooter(props) {
             title={nav.title}
             key={nav.key}
             icon={{
-              uri: require(`./images/${nav.key}.png`),
+              uri: require(`../../assets/images/navfooter/${nav.key}.png`),
               style: {
                 width: "22px",
                 height: "22px",
@@ -32,17 +32,24 @@ export default function NavFooter(props) {
               },
             }}
             selectedIcon={{
-              uri: require(`./images/${nav.key}-selected.png`),
+              uri: require(`../../assets/images/navfooter/${nav.key}-selected.png`),
               style: {
                 width: "22px",
                 height: "22px",
                 background: `center center /  21px 21px no-repeat`,
               },
             }}
-            selected={`/home${nav.path}` === location.pathname}
-            onPress={() => history.push(`/home${nav.path}`)}
-          >
-          </TabBar.Item>
+            selected={
+              `/home${nav.path}` === location.pathname ||
+              `/home${nav.path}/` === location.pathname
+            }
+            onPress={() =>
+              `/home${nav.path}` === location.pathname ||
+              `/home${nav.path}/` === location.pathname
+                ? null
+                : history.push(`/home${nav.path}`)
+            }
+          ></TabBar.Item>
         ))}
       </TabBar>
     </div>

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { serverConfig } from "../app/config";
+import { serverConfig } from "../config";
 
 const baseURL = serverConfig.url;
 /**
