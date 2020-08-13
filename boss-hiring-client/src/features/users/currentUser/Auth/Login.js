@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login, selectLoadingStatus } from "./../currentUserSlice";
-import { fetchUsers } from "../../usersSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { wsClient } from "../../../../app/AuthenticateRoute";
 import {
@@ -40,10 +39,6 @@ function Login() {
     if (login.fulfilled.match(resultAction)) {
       // succeed
       const user = unwrapResult(resultAction);
-      const type = {
-        type: user.type === "recruiter" ? "jobseeker" : "recruiter",
-      };
-      await dispatch(fetchUsers(type)); // fetch all users when login
       // build TCP connection between client and server for users list updated
       wsClient.send(JSON.stringify({ type: user.type }));
       // login page may be from 'redirect to=a from=b'

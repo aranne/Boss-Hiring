@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { register, selectLoadingStatus } from "./../currentUserSlice";
 import { wsClient } from "../../../../app/AuthenticateRoute";
-import { fetchUsers } from "../../usersSlice";
 import {
   NavBar,
   WingBlank,
@@ -28,6 +27,7 @@ function Register() {
   const [typeStyle2, setTypeStyle2] = useState("");
 
   let history = useHistory(); // use history hooks
+  const location = useLocation();
   const dispatch = useDispatch();
 
   const loadingStatus = useSelector(selectLoadingStatus);
@@ -59,13 +59,14 @@ function Register() {
     if (register.fulfilled.match(resultAction)) {
       // succeed
       const user = unwrapResult(resultAction);
-      const type = {
-        type: user.type === "recruiter" ? "jobseeker" : "recruiter",
-      };
-      await dispatch(fetchUsers(type)); // fetch all users when login
       // build TCP connection between client and server for users list updated
       wsClient.send(JSON.stringify({ type: user.type }));
-      history.push("/");
+      const path = getRedirectPath(user);
+      let { from } =
+        path === "/"
+          ? location.state || { from: { pathname: path } }
+          : { from: { pathname: path } };
+      history.replace(from);
     } else {
       if (resultAction.payload) {
         Toast.fail(resultAction.payload.message, 1.5);
@@ -73,6 +74,16 @@ function Register() {
         Toast.fail(resultAction.error.message, 1.5);
       }
     }
+  };
+
+  const getRedirectPath = (user) => {
+    let path;
+    if (Object.keys(user).filter((key) => user[key]).length <= 3) {
+      path = "/home/userinfo"; // fill out info form
+    } else {
+      path = "/";
+    }
+    return path;
   };
 
   const toLoginClick = () => {
