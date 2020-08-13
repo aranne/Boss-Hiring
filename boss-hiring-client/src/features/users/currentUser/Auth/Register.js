@@ -98,16 +98,16 @@ function Register() {
         <List>
           <ListItem>
             <InputItem
-              placeholder={"Please enter your user name"}
+              placeholder={"Enter your user name"}
               onChange={onUsernameChange}
             >
-              User Name
+              Username
             </InputItem>
           </ListItem>
           <ListItem>
             <InputItem
               type="password"
-              placeholder={"Please enter your password"}
+              placeholder={"Enter your password"}
               onChange={onPasswordChange}
             >
               Password
@@ -135,7 +135,7 @@ function Register() {
               onClick={onRegisterClick}
               disabled={!canLogin}
             >
-              Sign In
+              Sign Up
             </Button>
           </ListItem>
           <ListItem>

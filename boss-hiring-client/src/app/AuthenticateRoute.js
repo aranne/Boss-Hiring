@@ -6,10 +6,9 @@ import {
   selectCurrentUser,
   fetchCurrentUser,
 } from "../features/users/currentUser/currentUserSlice";
-import { Toast } from "antd-mobile";
+import { Toast, ActivityIndicator } from "antd-mobile";
 import Cookies from "js-cookie";
-import registerWSClient from '../web/webSocket'
-
+import registerWSClient from "../web/webSocket";
 
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
@@ -24,6 +23,7 @@ export default function AuthenticateRoute({ children, ...rest }) {
       Toast.fail("Your login cession has expired, please login again");
     }
     const fetchUser = async () => {
+      console.log("Fetching current user...");
       const resultAction = await dispatch(fetchCurrentUser());
       if (fetchCurrentUser.fulfilled.match(resultAction)) {
         const newUser = unwrapResult(resultAction);
@@ -35,20 +35,20 @@ export default function AuthenticateRoute({ children, ...rest }) {
         } else {
           Toast.fail(resultAction.error.message, 1.5);
         }
-        histroy.push('/login');
+        histroy.push("/login");
       }
     };
     // if we have userId in cookies but redux doesn't have current user
     if (userId && !user) {
-      console.log("Start fetching user");
       fetchUser(); // after fetching user, this component will re-render
     }
-  });
+  }, [user, userId, dispatch, histroy]);
 
   // stop render to wait for async result !!!!!!!
+
   if (userId && !user) {
     console.log("Auth accetps but user doesn't exist in Redux");
-    return null;
+    return <ActivityIndicator toast text="Loading..." animating={true} />;
   }
 
   return (
