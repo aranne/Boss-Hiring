@@ -3,7 +3,6 @@ import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login, selectLoadingStatus } from "./../currentUserSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
-import { wsClient } from "../../../../app/AuthenticateRoute";
 import {
   NavBar,
   WingBlank,
@@ -13,6 +12,7 @@ import {
   Toast,
 } from "antd-mobile";
 import Logo from "../../../../app/logo/logo";
+import registerWSClient from '../../../../web/webSocket';
 import "./auth.less";
 
 const ListItem = List.Item;
@@ -40,7 +40,7 @@ function Login() {
       // succeed
       const user = unwrapResult(resultAction);
       // build TCP connection between client and server for users list updated
-      wsClient.send(JSON.stringify({ type: user.type }));
+      registerWSClient(user.type);
       // login page may be from 'redirect to=a from=b'
       const path = getRedirectPath(user);
       let { from } =

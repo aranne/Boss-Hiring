@@ -6,16 +6,10 @@ import {
   selectCurrentUser,
   fetchCurrentUser,
 } from "../features/users/currentUser/currentUserSlice";
-import { usersUpdated } from "../features/users/usersSlice";
 import { Toast } from "antd-mobile";
 import Cookies from "js-cookie";
-import { w3cwebsocket } from "websocket";
-import { wsSeverConfig } from "./config";
+import registerWSClient from '../web/webSocket'
 
-export let wsClient = new w3cwebsocket(
-  wsSeverConfig.url,
-  wsSeverConfig.protocal
-);
 
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
@@ -29,30 +23,12 @@ export default function AuthenticateRoute({ children, ...rest }) {
     if (!userId) {
       Toast.fail("Your login cession has expired, please login again");
     }
-
-    const connectWsServer = (newUser) => {
-      wsClient = new w3cwebsocket(
-        wsSeverConfig.url,
-        wsSeverConfig.protocal
-      );
-      wsClient.onopen = function () {
-        console.log("WebSocket Client Connected");
-        wsClient.send(JSON.stringify({ type: newUser.type })); // if connection is open, send client user type
-      };
-      wsClient.onmessage = function (e) {
-        if (typeof e.data === "string") {
-          dispatch(usersUpdated(JSON.parse(e.data)));
-        }
-      };
-    };
-
     const fetchUser = async () => {
       const resultAction = await dispatch(fetchCurrentUser());
       if (fetchCurrentUser.fulfilled.match(resultAction)) {
         const newUser = unwrapResult(resultAction);
         // if we fetch current logged in user, send its type to web socket Sever
-        console.log("Build web socket TCP connection");
-        connectWsServer(newUser);
+        registerWSClient(newUser.type);
       } else {
         if (resultAction.payload) {
           Toast.fail(resultAction.payload.message, 1.5);
