@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
-import { Route, Redirect } from "react-router-dom";
+import { Route, Redirect, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
 import {
   selectCurrentUser,
   fetchCurrentUser,
 } from "../features/users/currentUser/currentUserSlice";
-import { fetchUsers, usersUpdated } from "../features/users/usersSlice";
+import { usersUpdated } from "../features/users/usersSlice";
 import { Toast } from "antd-mobile";
 import Cookies from "js-cookie";
 import { w3cwebsocket } from "websocket";
@@ -23,6 +23,7 @@ export default function AuthenticateRoute({ children, ...rest }) {
   const userId = Cookies.get("userId");
   const user = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
+  const histroy = useHistory();
 
   useEffect(() => {
     if (!userId) {
@@ -49,10 +50,6 @@ export default function AuthenticateRoute({ children, ...rest }) {
       const resultAction = await dispatch(fetchCurrentUser());
       if (fetchCurrentUser.fulfilled.match(resultAction)) {
         const newUser = unwrapResult(resultAction);
-        const type = {
-          type: newUser.type === "recruiter" ? "jobseeker" : "recruiter",
-        };
-        await dispatch(fetchUsers(type)); // fetch all users when login
         // if we fetch current logged in user, send its type to web socket Sever
         console.log("Build web socket TCP connection");
         connectWsServer(newUser);
@@ -62,6 +59,7 @@ export default function AuthenticateRoute({ children, ...rest }) {
         } else {
           Toast.fail(resultAction.error.message, 1.5);
         }
+        histroy.push('/login');
       }
     };
     // if we have userId in cookies but redux doesn't have current user
