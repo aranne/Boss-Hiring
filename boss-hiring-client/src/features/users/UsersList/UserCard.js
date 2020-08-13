@@ -1,17 +1,18 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Card, WingBlank, WhiteSpace } from "antd-mobile";
+import "./UserCard.less";
 
 function UserCard(props) {
   const user = props.user;
 
   return (
-    <div>
+    <div className="user-card">
       <WingBlank size="lg">
         <WhiteSpace size="lg" />
         <Card>
           <Card.Header
-            title={user.username}
+            // title={user.username}
             thumb={user.avatar}
             extra={user.username}
           />
