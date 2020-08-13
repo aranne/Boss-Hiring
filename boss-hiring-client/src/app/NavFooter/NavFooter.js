@@ -7,10 +7,6 @@ import { TabBar } from "antd-mobile";
 import "./navFooter.less";
 
 const NavFooter = (props) => {
-  NavFooter.propTypes = {
-    navList: PropTypes.array.isRequired,
-  };
-
   const navList = props.navList;
   const location = useLocation();
   const history = useHistory();
@@ -65,5 +61,9 @@ const NavFooter = (props) => {
     </div>
   );
 }
+
+NavFooter.propTypes = {
+  navList: PropTypes.array.isRequired,
+};
 
 export default NavFooter;
