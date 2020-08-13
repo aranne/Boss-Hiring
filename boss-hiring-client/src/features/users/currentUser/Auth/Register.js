@@ -79,7 +79,7 @@ function Register() {
   const getRedirectPath = (user) => {
     let path;
     if (Object.keys(user).filter((key) => user[key]).length <= 3) {
-      path = "/home/userinfo"; // fill out info form
+      path = "/userinfo"; // fill out info form
     } else {
       path = "/";
     }

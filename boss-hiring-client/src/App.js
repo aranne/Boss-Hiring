@@ -1,8 +1,8 @@
 import React from "react";
-import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Login from "./features/users/currentUser/Auth/Login";
 import Register from "./features/users/currentUser/Auth/Register";
-import Main from "./features/Main/Main";
+import Main from "./features/main";
 import AuthenticateRoute from "./app/AuthenticateRoute";
 
 function App() {
@@ -15,12 +15,9 @@ function App() {
         <Route path="/login">
           <Login />
         </Route>
-        <AuthenticateRoute path="/home">
+        <AuthenticateRoute>     {/* default route */}
           <Main />
         </AuthenticateRoute>
-        <Route>
-          <Redirect to="/home" /> {/* default route */}
-        </Route>
       </Switch>
     </BrowserRouter>
   );

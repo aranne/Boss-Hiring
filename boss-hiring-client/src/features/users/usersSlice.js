@@ -72,3 +72,6 @@ export const {
   selectById: selectUserById,
   selectIds: selectUserIds,
 } = usersAdapter.getSelectors((state) => state.users);
+
+export const selectLoadingStatus = (state) => state.users.loading;
+
