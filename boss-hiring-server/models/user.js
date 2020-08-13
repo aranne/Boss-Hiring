@@ -88,7 +88,9 @@ UserSchema.statics = {
    * @return {Promise}
    */
   load: async function (options) {
-    return this.findOne(options.criteria).select(options.select).exec();
+    const user = await this.findOne(options.criteria).select(options.select).exec();
+    if (!user) return Promise.reject();
+    return user;
   },
   /**
    * List all users
@@ -96,7 +98,7 @@ UserSchema.statics = {
    * @return {Promise}
    */
   list: async function (options) {
-    return this.find(options.criteria).select(options.select).exec();
+    return await this.find(options.criteria).select(options.select).exec();
   },
 };
 
