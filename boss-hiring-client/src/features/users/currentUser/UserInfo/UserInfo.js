@@ -2,8 +2,11 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Cookies from "js-cookie";
-import { selectCurrentUser, logout } from "../currentUserSlice";
 import { Result, List, Button, Modal } from "antd-mobile";
+import { selectCurrentUser, logout } from "../currentUserSlice";
+import { usersReseted } from "../../usersSlice";
+import { wsClient } from "../../../../web/webSocket";
+
 import "./UserInfo.less";
 
 function UserInfo() {
@@ -25,6 +28,8 @@ function UserInfo() {
         text: "OK",
         onPress: () => {
           dispatch(logout()); // clear current user in redux
+          dispatch(usersReseted([]));
+          wsClient.close();
           history.push("/login");
           Cookies.remove("userId"); // clear cookie
         },

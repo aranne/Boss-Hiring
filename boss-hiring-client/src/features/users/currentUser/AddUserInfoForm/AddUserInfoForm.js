@@ -17,7 +17,6 @@ import {
   selectCurrentUser,
 } from "./../currentUserSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { unwrapResult } from "@reduxjs/toolkit";
 import "./addUserInfoForm.less";
 
 function AddBossInfoForm() {
