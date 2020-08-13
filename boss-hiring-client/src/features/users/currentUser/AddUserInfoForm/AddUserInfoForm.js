@@ -62,8 +62,7 @@ function AddBossInfoForm() {
     const resultAction = await dispatch(updateUser(data));
     if (updateUser.fulfilled.match(resultAction)) {
       // succeed
-      const newUser = unwrapResult(resultAction);
-      console.log(newUser);
+      history.push("/");
     } else {
       if (resultAction.payload) {
         Toast.fail(resultAction.payload.message, 1.5);
@@ -114,7 +113,7 @@ function AddBossInfoForm() {
 
       <List renderHeader={() => avatarHeader}>
         <Grid
-          itemStyle={{height: "auto"}}
+          itemStyle={{ height: "auto" }}
           data={avatarList}
           carouselMaxRow={2}
           isCarousel
