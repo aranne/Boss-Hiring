@@ -58,7 +58,7 @@ export const updateUser = createAsyncThunk(
 
 export const fetchCurrentUser = createAsyncThunk(
   "currentUser/fetchCurrentUser",
-  async (userId, { getState, requestId, rejectWithValue }) => {
+  async (_, { getState, requestId, rejectWithValue }) => {
     const { loading, currentReqeustId } = getState().currentUser;
     if (loading !== "pending" || currentReqeustId !== requestId)
       return Promise.reject("Try it later");
