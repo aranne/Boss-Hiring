@@ -7,7 +7,7 @@ import { reqAllMessages } from "../../web/messageAPI";
 
 const messagesAdapter = createEntityAdapter({
   selectId: (message) => message._id,
-  sortComparer: (a, b) => b.time.localeCompare(a.time),
+  sortComparer: (a, b) => a.time.localeCompare(b.time),
 });
 
 export const fetchMessages = createAsyncThunk(
@@ -36,6 +36,7 @@ const messagesSlice = createSlice({
         msg.read = true;
       });
     },
+    messageAdded: messagesAdapter.addOne,
   },
   extraReducers: {
     [fetchMessages.pending]: (state, action) => {
@@ -69,7 +70,7 @@ const messagesSlice = createSlice({
 
 export default messagesSlice.reducer;
 
-export const { allMessagesRead } = messagesSlice.actions;
+export const { allMessagesRead, messageAdded } = messagesSlice.actions;
 
 export const { selectAll: selectAllMessages } = messagesAdapter.getSelectors(
   (state) => state.messages

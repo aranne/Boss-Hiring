@@ -38,10 +38,30 @@ wsSocketListen(wsSever);
 var server2 = http.createServer(app);
 
 /**
+ * Connect to Socket IO
+ */
+require('./socketio')(server2);
+
+/**
  * Connect to MongoDB
  */
 const dbUrl = require("../config").dbConfig.url;
 connectDB(dbUrl);
+
+function connectDB(url) {
+  mongoose.connection
+    .on("error", console.error.bind(console, "connection error:"))
+    .on("disconnected", connectDB)
+    .once("open", function () {
+      console.log("db connection opens");
+      listenOnServer();
+    });
+  return mongoose.connect(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+}
+
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -106,22 +126,4 @@ function onListening() {
   var addr = server2.address();
   var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
   debug("Listening on " + bind);
-}
-
-/**
- * Connect to MongoDB
- */
-
-function connectDB(url) {
-  mongoose.connection
-    .on("error", console.error.bind(console, "connection error:"))
-    .on("disconnected", connectDB)
-    .once("open", function () {
-      console.log("db connection opens");
-      listenOnServer();
-    });
-  return mongoose.connect(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
 }

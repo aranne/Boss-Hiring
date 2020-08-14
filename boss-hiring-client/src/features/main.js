@@ -1,8 +1,9 @@
 import React from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import AddUserInfoForm from "./users/currentUser/AddUserInfoForm/AddUserInfoForm";
 import NotFind from "../app/NotFind";
 import Home from "./Home/Home";
+import Chat from "./messages/Chat";
 
 function Main() {
   return (
@@ -13,8 +14,14 @@ function Main() {
       <Route exact path="/userinfo">
         <AddUserInfoForm />
       </Route>
-      <Route>
+      <Route exact path="/chat/:userId">
+        <Chat />
+      </Route>
+      <Route exact path="/notfind">
         <NotFind />
+      </Route>
+      <Route>
+        <Redirect to="/notfind" />
       </Route>
     </Switch>
   );
