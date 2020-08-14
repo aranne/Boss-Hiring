@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Redirect, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
@@ -6,6 +6,7 @@ import {
   selectCurrentUser,
   fetchCurrentUser,
 } from "../features/users/currentUser/currentUserSlice";
+import { fetchUsers } from "../features/users/usersSlice";
 import { Toast, ActivityIndicator } from "antd-mobile";
 import Cookies from "js-cookie";
 import registerWSClient from "../web/webSocket";
@@ -17,6 +18,7 @@ export default function AuthenticateRoute({ children, ...rest }) {
   const user = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
   const histroy = useHistory();
+  const [loadingUsers, setLoadingUsers] = useState(true);
 
   useEffect(() => {
     if (!userId) {
@@ -27,6 +29,15 @@ export default function AuthenticateRoute({ children, ...rest }) {
       const resultAction = await dispatch(fetchCurrentUser());
       if (fetchCurrentUser.fulfilled.match(resultAction)) {
         const newUser = unwrapResult(resultAction);
+        async function getAllUsers() {
+          console.log("Fetching all users...");
+          const type = {
+            type: newUser.type === "recruiter" ? "jobseeker" : "recruiter",
+          };
+          await dispatch(fetchUsers(type));
+          setLoadingUsers(false);
+        }
+        getAllUsers();
         // if we fetch current logged in user, send its type to web socket Sever
         registerWSClient(newUser.type);
       } else {
@@ -44,10 +55,16 @@ export default function AuthenticateRoute({ children, ...rest }) {
     }
   }, [user, userId, dispatch, histroy]);
 
-  // stop render to wait for async result !!!!!!!
+  // stop rendering and wait for async result !!!!!!!
 
   if (userId && !user) {
     console.log("Auth accetps but user doesn't exist in Redux");
+    return <ActivityIndicator toast text="Loading..." animating={true} />;
+  }
+
+  // if users haven't been loaded, stop rendering and wait
+  if (loadingUsers) {
+    console.log("Waiting for users to be loaded");
     return <ActivityIndicator toast text="Loading..." animating={true} />;
   }
 
