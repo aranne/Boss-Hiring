@@ -1,24 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Route, Redirect, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { Toast, ActivityIndicator } from "antd-mobile";
+import Cookies from "js-cookie";
 import {
   selectCurrentUser,
   fetchCurrentUser,
+  selectPrepareStatus,
 } from "../features/users/currentUser/currentUserSlice";
-import { fetchUsers } from "../features/users/usersSlice";
-import { Toast, ActivityIndicator } from "antd-mobile";
-import Cookies from "js-cookie";
 import registerWSClient from "../web/webSocket";
+import prepareLogin from "../features/users/currentUser/Auth/prepare";
 
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
 export default function AuthenticateRoute({ children, ...rest }) {
   const userId = Cookies.get("userId");
   const user = useSelector(selectCurrentUser);
+  const prepareStatus = useSelector(selectPrepareStatus);
   const dispatch = useDispatch();
   const histroy = useHistory();
-  const [loadingUsers, setLoadingUsers] = useState(true);
 
   useEffect(() => {
     if (!userId) {
@@ -29,17 +30,9 @@ export default function AuthenticateRoute({ children, ...rest }) {
       const resultAction = await dispatch(fetchCurrentUser());
       if (fetchCurrentUser.fulfilled.match(resultAction)) {
         const newUser = unwrapResult(resultAction);
-        async function getAllUsers() {
-          console.log("Fetching all users...");
-          const type = {
-            type: newUser.type === "recruiter" ? "jobseeker" : "recruiter",
-          };
-          await dispatch(fetchUsers(type));
-          setLoadingUsers(false);
-        }
-        getAllUsers();
+
         // if we fetch current logged in user, send its type to web socket Sever
-        registerWSClient(newUser.type);
+        registerWSClient(newUser);
       } else {
         if (resultAction.payload) {
           Toast.fail(resultAction.payload.message, 1.5);
@@ -55,6 +48,12 @@ export default function AuthenticateRoute({ children, ...rest }) {
     }
   }, [user, userId, dispatch, histroy]);
 
+  useEffect(() => {
+    if (!prepareStatus && user) {
+      prepareLogin(user);
+    }
+  }, [prepareStatus, user])
+
   // stop rendering and wait for async result !!!!!!!
 
   if (userId && !user) {
@@ -63,8 +62,8 @@ export default function AuthenticateRoute({ children, ...rest }) {
   }
 
   // if users haven't been loaded, stop rendering and wait
-  if (loadingUsers) {
-    console.log("Waiting for users to be loaded");
+  if (userId && !prepareStatus) {
+    console.log("Preparing...");
     return <ActivityIndicator toast text="Loading..." animating={true} />;
   }
 

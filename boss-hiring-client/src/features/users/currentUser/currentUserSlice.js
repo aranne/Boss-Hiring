@@ -78,6 +78,7 @@ const currentUserSlice = createSlice({
   name: "currentUser",
   initialState: {
     currentUser: null,
+    prepared: false,
     loading: "idle",
     currentReqeustId: undefined,
     error: null,
@@ -85,7 +86,11 @@ const currentUserSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.currentUser = null;
+      state.prepared = false;
     },
+    prepared: (state, action) => {
+      state.prepared = action.payload;
+    }
   },
   extraReducers: {
     [register.pending]: (state, action) => {
@@ -198,7 +203,8 @@ const currentUserSlice = createSlice({
 
 export default currentUserSlice.reducer;
 
-export const { logout } = currentUserSlice.actions;
+export const { logout, prepared } = currentUserSlice.actions;
 
 export const selectCurrentUser = (state) => state.currentUser.currentUser;
 export const selectLoadingStatus = (state) => state.currentUser.loading;
+export const selectPrepareStatus = (state) => state.currentUser.prepared;
