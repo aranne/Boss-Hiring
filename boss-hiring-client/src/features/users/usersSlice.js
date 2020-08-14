@@ -1,9 +1,9 @@
-import { reqAllUsers } from "../../web/userAPI";
 import {
   createEntityAdapter,
   createSlice,
   createAsyncThunk,
 } from "@reduxjs/toolkit";
+import { reqAllUsers } from "../../web/userAPI";
 
 const usersAdapter = createEntityAdapter({
   selectId: (user) => user._id,

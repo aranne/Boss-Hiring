@@ -75,6 +75,12 @@ exports.show = async (req, res) => {
 };
 
 exports.index = async (req, res) => {
+  const userId = req.cookies.userId;
+
+  if (!userId) {
+    return res.status(401).json({ message: "Please login first" });
+  }
+
   const { type } = req.query;
 
   const criteria = { type };
