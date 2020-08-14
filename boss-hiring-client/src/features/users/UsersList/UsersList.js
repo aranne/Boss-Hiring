@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentUser } from "../currentUser/currentUserSlice";
-import { ActivityIndicator } from "antd-mobile";
-import { fetchUsers, selectAllUsers, selectLoadingStatus } from "../usersSlice";
+import React from "react";
+import { useSelector } from "react-redux";
+import { selectAllUsers } from "../usersSlice";
 import UserCard from "./UserCard";
 import "./UsersList.less";
 
