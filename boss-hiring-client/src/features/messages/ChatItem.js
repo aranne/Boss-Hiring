@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Flex, Card } from "antd-mobile";
+import { Flex } from "antd-mobile";
 
 const myImg = (src) => <img src={src} className="chat-avatar" alt="" />;
 

@@ -2,6 +2,7 @@ import {
   createEntityAdapter,
   createSlice,
   createAsyncThunk,
+  createSelector,
 } from "@reduxjs/toolkit";
 import { reqAllMessages } from "../../web/messageAPI";
 
@@ -74,4 +75,10 @@ export const { allMessagesRead, messageAdded } = messagesSlice.actions;
 
 export const { selectAll: selectAllMessages } = messagesAdapter.getSelectors(
   (state) => state.messages
+);
+
+export const selectMessagesByUser = createSelector(
+  [selectAllMessages, (state, userId) => userId],
+  (msgs, userId) =>
+    msgs.filter((msg) => msg.to === userId || msg.from === userId)
 );
