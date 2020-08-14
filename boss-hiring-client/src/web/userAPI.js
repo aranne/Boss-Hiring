@@ -1,11 +1,9 @@
-/**
- * HTTP Request API
- */
 import { client } from "./client";
 
 /**
  * Register
  * @param {Object} user
+ * @return {Promise}
  */
 export const reqRegister = (user) => {
   return client.post("/users/register", user);
@@ -14,6 +12,7 @@ export const reqRegister = (user) => {
 /**
  * Login
  * @param {Object} user
+ * @return {Promise}
  */
 export const reqLogin = (user) => {
   return client.post("/users/login", user);
@@ -22,6 +21,7 @@ export const reqLogin = (user) => {
 /**
  * Update
  * @param {Object} user
+ * @return {Promise}
  */
 export const reqUpdateUser = (user) => {
   return client.post("/users/update", user);
@@ -30,6 +30,7 @@ export const reqUpdateUser = (user) => {
 /**
  * Get all users
  * @param {Object} type type of user [recruiter/jobseeker] must exist
+ * @return {Promise}
  */
 export const reqAllUsers = (type) => {
   return client.get("/users/userlist", { params: type });
@@ -37,6 +38,7 @@ export const reqAllUsers = (type) => {
 
 /**
  * Fetch current user by id in cookies
+ * @return {Promise}
  */
 export const reqFetchUser = () => {
   return client.get("/users/user");
