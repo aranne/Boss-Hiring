@@ -10,9 +10,32 @@ import "./Home.less";
 export default function Home() {
   const user = useSelector(selectCurrentUser);
   const userHead = user.type === "recruiter" ? "Job Seekers" : "Recruiters";
+  const tabs = [
+    {
+      head: userHead,
+      key: "users",
+      iconTitle: userHead,
+      name: "first",
+      children: UserList,
+    },
+    {
+      head: "Chats",
+      key: "chats",
+      iconTitle: "Chats",
+      name: "second",
+      children: MessageList,
+    },
+    {
+      head: "Profile",
+      key: "profile",
+      iconTitle: "Profile",
+      name: "third",
+      children: UserInfo,
+    },
+  ];
 
   const [title, setTilte] = useState(userHead);
-  const [tab, setTab] = useState("first");
+  const [currentTab, setCurrentTab] = useState("first");
 
   return (
     <div className="home-page">
@@ -22,87 +45,35 @@ export default function Home() {
         unselectedTintColor="#949494"
         tintColor="#33A3F4"
       >
-        <TabBar.Item
-          title={userHead}
-          key="users"
-          icon={{
-            uri: require("./images/users.png"),
-            style: {
-              width: "22px",
-              height: "22px",
-              background: `center center /  21px 21px no-repeat`,
-            },
-          }}
-          selectedIcon={{
-            uri: require("./images/users-selected.png"),
-            style: {
-              width: "22px",
-              height: "22px",
-              background: `center center /  21px 21px no-repeat`,
-            },
-          }}
-          selected={tab === "first"}
-          onPress={() => {
-            setTab("first");
-            setTilte(userHead);
-          }}
-        >
-          <UserList />
-        </TabBar.Item>
-        <TabBar.Item
-          title="Chats"
-          key="Chats"
-          icon={{
-            uri: require("./images/chats.png"),
-            style: {
-              width: "22px",
-              height: "22px",
-              background: `center center /  21px 21px no-repeat`,
-            },
-          }}
-          selectedIcon={{
-            uri: require("./images/chats-selected.png"),
-            style: {
-              width: "22px",
-              height: "22px",
-              background: `center center /  21px 21px no-repeat`,
-            },
-          }}
-          selected={tab === "second"}
-          onPress={() => {
-            setTab("second");
-            setTilte("Chats");
-          }}
-        >
-          <MessageList />
-        </TabBar.Item>
-        <TabBar.Item
-          title="Personal"
-          key="Personal"
-          icon={{
-            uri: require("./images/profile.png"),
-            style: {
-              width: "22px",
-              height: "22px",
-              background: `center center /  21px 21px no-repeat`,
-            },
-          }}
-          selectedIcon={{
-            uri: require("./images/profile-selected.png"),
-            style: {
-              width: "22px",
-              height: "22px",
-              background: `center center /  21px 21px no-repeat`,
-            },
-          }}
-          selected={tab === "third"}
-          onPress={() => {
-            setTab("third");
-            setTilte("Profile");
-          }}
-        >
-          <UserInfo />
-        </TabBar.Item>
+        {tabs.map((tab) => (
+          <TabBar.Item
+            title={tab.iconTitle}
+            key={tab.key}
+            icon={{
+              uri: require(`./images/${tab.key}.png`),
+              style: {
+                width: "22px",
+                height: "22px",
+                background: `center center /  21px 21px no-repeat`,
+              },
+            }}
+            selectedIcon={{
+              uri: require(`./images/${tab.key}-selected.png`),
+              style: {
+                width: "22px",
+                height: "22px",
+                background: `center center /  21px 21px no-repeat`,
+              },
+            }}
+            selected={tab.name === currentTab}
+            onPress={() => {
+              setCurrentTab(tab.name);
+              setTilte(tab.head);
+            }}
+          >
+            <tab.children />
+          </TabBar.Item>
+        ))}
       </TabBar>
     </div>
   );
