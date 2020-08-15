@@ -5,5 +5,14 @@ import { client } from "./client";
  * @return {Promise}
  */
 export const reqAllMessages = () => {
-  return client.get('/msgs/msglist');
-}
+  return client.get("/msgs/msglist");
+};
+
+/**
+ * Read all messages
+ * @param {String} from
+ * @return {Promise}
+ */
+export const reqReadAllMessages = (from) => {
+  return client.post("/msgs/readmsg", { from });
+};

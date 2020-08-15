@@ -4,7 +4,7 @@ import {
   createAsyncThunk,
   createSelector,
 } from "@reduxjs/toolkit";
-import { reqAllMessages } from "../../web/messageAPI";
+import { reqAllMessages, reqReadAllMessages } from "../../web/messageAPI";
 
 const messagesAdapter = createEntityAdapter({
   selectId: (message) => message._id,
@@ -23,6 +23,24 @@ export const fetchMessages = createAsyncThunk(
   }
 );
 
+export const readAllMessages = createAsyncThunk(
+  "messages/readAllMessages",
+  async (msgs, { requestId, getState }) => {
+    const { loading, currentRequestId } = getState().messages;
+    if (loading !== "pending" || currentRequestId !== requestId) {
+      return Promise.reject("Try it later");
+    }
+    const from = msgs[0].from;
+    const response = await reqReadAllMessages(from);
+    const count = response.data.num;
+    if (count === msgs.length) {
+      return msgs.map((msg) => Object.assign({ ...msg }, { read: true }));
+    } else {
+      return Promise.reject("Set read error");
+    }
+  }
+);
+
 const messagesSlice = createSlice({
   name: "messages",
   initialState: messagesAdapter.getInitialState({
@@ -31,12 +49,6 @@ const messagesSlice = createSlice({
     error: null,
   }),
   reducers: {
-    allMessagesRead(state, action) {
-      const msgs = action.payload; // an array of msgs
-      msgs.forEach((msg) => {
-        msg.read = true;
-      });
-    },
     messageAdded: messagesAdapter.addOne,
   },
   extraReducers: {
@@ -66,12 +78,38 @@ const messagesSlice = createSlice({
         state.error = action.error;
       }
     },
+    [readAllMessages.pending]: (state, action) => {
+      if (state.loading === "idle") {
+        state.loading = "pending";
+        state.currentRequestId = action.meta.requestId;
+      }
+    },
+    [readAllMessages.fulfilled]: (state, action) => {
+      if (
+        state.loading === "pending" &&
+        state.currentRequestId === action.meta.requestId
+      ) {
+        state.loading = "idle";
+        state.currentRequestId = undefined;
+        messagesAdapter.upsertMany(state, action.payload);
+      }
+    },
+    [readAllMessages.rejected]: (state, action) => {
+      if (
+        state.loading === "pending" &&
+        state.currentRequestId === action.meta.requestId
+      ) {
+        state.loading = "ilde";
+        state.currentRequestId = undefined;
+        state.error = action.error;
+      }
+    },
   },
 });
 
 export default messagesSlice.reducer;
 
-export const { allMessagesRead, messageAdded } = messagesSlice.actions;
+export const { messageAdded } = messagesSlice.actions;
 
 export const { selectAll: selectAllMessages } = messagesAdapter.getSelectors(
   (state) => state.messages

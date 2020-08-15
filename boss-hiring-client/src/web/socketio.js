@@ -6,6 +6,7 @@ import { messageAdded } from "../features/messages/messagesSlice";
 
 export function initIO(user) {
   const userId = user._id;
+  // singleton pattern
   if (!io.socket) {
     io.socket = io(socketIOConfig.url);
     io.socket.on('receiveMsg', (msg) => {

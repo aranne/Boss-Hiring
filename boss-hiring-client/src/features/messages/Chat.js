@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { NavBar, List, Icon, InputItem } from "antd-mobile";
-import { selectAllMessages } from "./messagesSlice";
+import { selectMessagesByUser, readAllMessages } from "./messagesSlice";
 import { sendMessage } from "../../web/socketio";
 import { selectCurrentUser } from "../users/currentUser/currentUserSlice";
 import { selectUserById } from "../../features/users/usersSlice";
@@ -15,12 +15,17 @@ function Chat() {
   const currentUser = useSelector(selectCurrentUser);
   let { userId: otherUserId } = useParams();
   const otherUser = useSelector((state) => selectUserById(state, otherUserId));
-  const allMessages = useSelector(selectAllMessages);
   const [content, setContent] = useState("");
-
-  const messages = allMessages.filter(
-    (msg) => msg.to === otherUserId || msg.from === otherUserId
+  const messages = useSelector((state) =>
+    selectMessagesByUser(state, otherUserId)
   );
+
+  useEffect(() => {
+    const otherMessages = messages.filter((msg) => msg.from === otherUserId && msg.read === false);
+    if (otherMessages.length > 0) {
+      dispatch(readAllMessages(otherMessages));
+    }
+  }, [messages, otherUserId, dispatch]);
 
   const onLeftClick = () => {
     history.goBack();
@@ -37,6 +42,7 @@ function Chat() {
     setContent("");
   };
 
+  // wrong url
   if (!otherUser) {
     history.replace("/notfind");
     return null;
