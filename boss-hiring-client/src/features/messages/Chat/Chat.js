@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { NavBar, List, Icon, InputItem } from "antd-mobile";
@@ -19,13 +19,20 @@ function Chat() {
   const messages = useSelector((state) =>
     selectMessagesByUser(state, otherUserId)
   );
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    const otherMessages = messages.filter((msg) => msg.from === otherUserId && msg.read === false);
+    const otherMessages = messages.filter(
+      (msg) => msg.from === otherUserId && msg.read === false
+    );
     if (otherMessages.length > 0) {
       dispatch(readAllMessages(otherMessages));
     }
   }, [messages, otherUserId, dispatch]);
+
+  useEffect(() => {
+    messagesEndRef.current.scrollIntoView({ behavier: "smooth" });
+  });
 
   const onLeftClick = () => {
     history.goBack();
@@ -80,6 +87,7 @@ function Chat() {
             );
           }
         })}
+        <div ref={messagesEndRef}></div>
       </List>
       <div className="send-bar">
         <InputItem
