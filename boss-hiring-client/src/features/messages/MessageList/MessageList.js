@@ -15,6 +15,7 @@ function MessageList({ setUnread }) {
 
   let userCntMap = new Map(); // keeps item in order of insertion
   let userMsgMap = new Map();
+  let totalCnt = 0;
   for (let i = messages.length - 1; i >= 0; i--) {
     const msg = messages[i];
     const otherId = msg.to === currentUser._id ? msg.from : msg.to;
@@ -25,8 +26,11 @@ function MessageList({ setUnread }) {
     // Count unread messages
     if (msg.to === currentUser._id && !msg.read) {
       userCntMap.set(msg.from, userCntMap.get(msg.from) + 1);
+      totalCnt++;
     }
   }
+
+  setUnread(totalCnt); // call the callback function to change the badge
 
   // get user info corresponding to user_id
   const userInfoMap = useSelector((state) =>
@@ -40,8 +44,9 @@ function MessageList({ setUnread }) {
   return (
     <div>
       <List className="message-list">
-        {Array.from(userMsgMap).map(entry => {
-          const userId = entry[0], msg = entry[1];
+        {Array.from(userMsgMap).map((entry) => {
+          const userId = entry[0],
+            msg = entry[1];
           const count = userCntMap.get(userId);
           const otherUser = userInfoMap.get(userId);
           return (
@@ -53,6 +58,7 @@ function MessageList({ setUnread }) {
               onClick={() => onClick(userId)}
             >
               {msg.content}
+              <List.Item.Brief>{otherUser.username}</List.Item.Brief>
             </List.Item>
           );
         })}
