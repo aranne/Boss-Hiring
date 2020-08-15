@@ -3,7 +3,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import AddUserInfoForm from "./users/currentUser/AddUserInfoForm/AddUserInfoForm";
 import NotFind from "../app/NotFind";
 import Home from "./Home/Home";
-import Chat from "./messages/Chat";
+import Chat from "./messages/Chat/Chat";
 
 function Main() {
   return (

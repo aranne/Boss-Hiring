@@ -4,18 +4,23 @@ import { NavBar, TabBar } from "antd-mobile";
 import { selectCurrentUser } from "../users/currentUser/currentUserSlice";
 import UserInfo from "../users/currentUser/UserInfo/UserInfo";
 import UserList from "../users/UsersList/UsersList";
-import MessageList from "./../messages/MessageList";
+import MessageList from "../messages/MessageList/MessageList";
 import "./Home.less";
 
 export default function Home() {
   const user = useSelector(selectCurrentUser);
   const userHead = user.type === "recruiter" ? "Job Seekers" : "Recruiters";
+  const [title, setTilte] = useState(userHead);
+  const [currentTab, setCurrentTab] = useState("first");
+  const [unread, setUnread] = useState(0);
+  
   const tabs = [
     {
       head: userHead,
       key: "users",
       iconTitle: userHead,
       name: "first",
+      badge: 0,
       children: UserList,
     },
     {
@@ -23,6 +28,7 @@ export default function Home() {
       key: "chats",
       iconTitle: "Chats",
       name: "second",
+      badge: unread,
       children: MessageList,
     },
     {
@@ -30,12 +36,10 @@ export default function Home() {
       key: "profile",
       iconTitle: "Profile",
       name: "third",
+      badge: 0,
       children: UserInfo,
     },
   ];
-
-  const [title, setTilte] = useState(userHead);
-  const [currentTab, setCurrentTab] = useState("first");
 
   return (
     <div className="home-page">
@@ -65,13 +69,14 @@ export default function Home() {
                 background: `center center /  21px 21px no-repeat`,
               },
             }}
+            badge={tab.badge}
             selected={tab.name === currentTab}
             onPress={() => {
               setCurrentTab(tab.name);
               setTilte(tab.head);
             }}
           >
-            <tab.children />
+            {tab.key === 'chats' ? <tab.children setUnread={setUnread} /> : <tab.children />}
           </TabBar.Item>
         ))}
       </TabBar>

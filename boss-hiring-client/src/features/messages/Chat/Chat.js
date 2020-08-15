@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
 import { NavBar, List, Icon, InputItem } from "antd-mobile";
-import { selectMessagesByUser, readAllMessages } from "./messagesSlice";
-import { sendMessage } from "../../web/socketio";
-import { selectCurrentUser } from "../users/currentUser/currentUserSlice";
-import { selectUserById } from "../../features/users/usersSlice";
+import { selectMessagesByUser, readAllMessages } from "../messagesSlice";
+import { sendMessage } from "../../../web/socketio";
+import { selectCurrentUser } from "../../users/currentUser/currentUserSlice";
+import { selectUserById } from "../../users/usersSlice";
 import ChatItem from "./ChatItem";
 import "./Chat.less";
 
