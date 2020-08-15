@@ -2,6 +2,7 @@ import {
   createEntityAdapter,
   createSlice,
   createAsyncThunk,
+  createSelector,
 } from "@reduxjs/toolkit";
 import { reqAllUsers } from "../../web/userAPI";
 
@@ -47,7 +48,7 @@ const usersSlice = createSlice({
       ) {
         state.loading = "idle";
         state.currentRequestId = undefined;
-        usersAdapter.upsertMany(state, action.payload);     // upsert many users into list
+        usersAdapter.upsertMany(state, action.payload); // upsert many users into list
       }
     },
     [fetchUsers.rejected]: (state, action) => {
@@ -75,3 +76,8 @@ export const {
 
 export const selectLoadingStatus = (state) => state.users.loading;
 
+// userIds should be a map, and returns a new map with specific user as value
+export const selectUsersByIds = createSelector(
+  [selectAllUsers, (state, userIdsMap) => userIdsMap],
+  (users, userIdsMap) => new Map(users.filter((user) => userIdsMap.has(user._id)).map(user => [user._id, user]))
+);

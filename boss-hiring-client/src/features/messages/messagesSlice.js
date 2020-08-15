@@ -120,3 +120,8 @@ export const selectMessagesByUser = createSelector(
   (msgs, userId) =>
     msgs.filter((msg) => msg.to === userId || msg.from === userId)
 );
+
+export const selectReceivedMessages = createSelector(
+  [selectAllMessages, (state, userId) => userId],
+  (msgs, userId) => msgs.filter((msg) => msg.to === userId)
+);
