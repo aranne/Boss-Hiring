@@ -50,6 +50,7 @@ const messagesSlice = createSlice({
   }),
   reducers: {
     messageAdded: messagesAdapter.addOne,
+    messageReset: messagesAdapter.setAll,
   },
   extraReducers: {
     [fetchMessages.pending]: (state, action) => {
@@ -109,7 +110,7 @@ const messagesSlice = createSlice({
 
 export default messagesSlice.reducer;
 
-export const { messageAdded } = messagesSlice.actions;
+export const { messageAdded, messageReset } = messagesSlice.actions;
 
 export const { selectAll: selectAllMessages } = messagesAdapter.getSelectors(
   (state) => state.messages

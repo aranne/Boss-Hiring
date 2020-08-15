@@ -37,18 +37,13 @@ function MessageList({ setUnread }) {
     history.push(`/chat/${userId}`);
   };
 
-  console.log(userMsgMap);
-
   return (
     <div>
       <List className="message-list">
- 
-
         {Array.from(userMsgMap).map(entry => {
           const userId = entry[0], msg = entry[1];
           const count = userCntMap.get(userId);
           const otherUser = userInfoMap.get(userId);
-          console.log(count, otherUser);
           return (
             <List.Item
               key={msg._id}

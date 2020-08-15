@@ -4,7 +4,8 @@ import { useHistory } from "react-router-dom";
 import Cookies from "js-cookie";
 import { Result, List, Button, Modal } from "antd-mobile";
 import { selectCurrentUser, logout } from "../currentUserSlice";
-import { usersReseted } from "../../usersSlice";
+import { usersReset } from "../../usersSlice";
+import { messageReset } from "../../../messages/messagesSlice";
 import { wsClient } from "../../../../web/webSocket";
 
 import "./UserInfo.less";
@@ -28,7 +29,8 @@ function UserInfo() {
         text: "OK",
         onPress: () => {
           dispatch(logout()); // clear current user in redux
-          dispatch(usersReseted([]));
+          dispatch(usersReset([]));
+          dispatch(messageReset([]));
           wsClient.close();
           history.push("/login");
           Cookies.remove("userId"); // clear cookie
