@@ -44,6 +44,10 @@ function UserInfo() {
     }, 500000);
   };
 
+  const onEditClick = () => {
+    history.push('/userinfo');
+  }
+
   return (
     <div className="user-info">
       <Result
@@ -62,6 +66,7 @@ function UserInfo() {
           <List.Item.Brief>Info: {user.info}</List.Item.Brief>
         </List.Item>
       </List>
+      <Button onClick={onEditClick}>Edit</Button>
       <Button type="warning" onClick={onButtonClick}>
         Log Out
       </Button>
