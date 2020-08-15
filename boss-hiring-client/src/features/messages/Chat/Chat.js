@@ -7,6 +7,7 @@ import { sendMessage } from "../../../web/socketio";
 import { selectCurrentUser } from "../../users/currentUser/currentUserSlice";
 import { selectUserById } from "../../users/usersSlice";
 import ChatItem from "./ChatItem";
+import QueueAnim from "rc-queue-anim";
 import "./Chat.less";
 
 function Chat() {
@@ -65,30 +66,33 @@ function Chat() {
         {otherUser.username}
       </NavBar>
       <List className="chat-list">
-        {messages.map((msg) => {
-          // if this msg is from other user to me
-          if (otherUser._id === msg.from) {
-            return (
-              <ChatItem
-                key={msg._id}
-                avatar={otherUser.avatar}
-                isMe={false}
-                content={msg.content}
-              />
-            );
-          } else {
-            return (
-              <ChatItem
-                key={msg._id}
-                avatar={currentUser.avatar}
-                isMe={true}
-                content={msg.content}
-              />
-            );
-          }
-        })}
-        <div ref={messagesEndRef}></div>
+        <QueueAnim type="alpha">
+          {messages.map((msg) => {
+            // if this msg is from other user to me
+            if (otherUser._id === msg.from) {
+              return (
+                <ChatItem
+                  key={msg._id}
+                  avatar={otherUser.avatar}
+                  isMe={false}
+                  content={msg.content}
+                />
+              );
+            } else {
+              return (
+                <ChatItem
+                  key={msg._id}
+                  avatar={currentUser.avatar}
+                  isMe={true}
+                  content={msg.content}
+                />
+              );
+            }
+          })}
+          <div ref={messagesEndRef}></div>
+        </QueueAnim>
       </List>
+
       <div className="send-bar">
         <InputItem
           value={content}

@@ -66,7 +66,7 @@ const usersSlice = createSlice({
 
 export default usersSlice.reducer;
 
-export const { usersUpdated, usersReset: usersReset } = usersSlice.actions;
+export const { usersUpdated, usersReset } = usersSlice.actions;
 
 export const {
   selectAll: selectAllUsers,

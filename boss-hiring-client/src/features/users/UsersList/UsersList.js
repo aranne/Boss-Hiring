@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { selectAllUsers } from "../usersSlice";
 import UserCard from "./UserCard";
+import QueueAnim from "rc-queue-anim";
 import "./UsersList.less";
 
 function UserList() {
@@ -9,9 +10,11 @@ function UserList() {
 
   return (
     <div className="users-list">
-      {users.map((user) => (
-        <UserCard key={user._id} user={user} />
-      ))}
+      <QueueAnim type="scale">
+        {users.map((user) => (
+          <UserCard key={user._id} user={user} />
+        ))}
+      </QueueAnim>
     </div>
   );
 }
