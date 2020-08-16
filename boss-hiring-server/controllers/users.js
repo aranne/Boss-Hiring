@@ -9,8 +9,12 @@ exports.create = async (req, res) => {
     const newUser = await user.save();
     const data = only(newUser, "_id username type");
     await notifyAll(newUser); // notify all clients of other type
-
-    res.cookie("userId", newUser._id, { maxAge: 1000 * 60 * 60 * 24, secure: true, sameSite: None });
+    // secure for HTTPS, sameSite:None allows cookies sent
+    res.cookie("userId", newUser._id, {
+      maxAge: 1000 * 60 * 60 * 24,
+      sameSite: "none",
+      secure: true,
+    });
     res.json({ user: data });
   } catch (err) {
     res.status(400).json({ message: "This user already exists" });
@@ -24,9 +28,14 @@ exports.login = async (req, res) => {
     const user = await User.load({ criteria });
     await user.authenticate(password);
     user.password = undefined; // remove password before send json
-    res.cookie("userId", user._id, { maxAge: 1000 * 60 * 60 * 24, secure: true, sameSite: None });
+    res.cookie("userId", user._id, {
+      maxAge: 1000 * 60 * 60 * 24,
+      sameSite: "none",
+      secure: true,
+    });
     res.json({ user });
   } catch (err) {
+    console.log(err);
     res.clearCookie("userId"); // clear userId cookie
     res.status(401).json({ message: "Username or Password is not correct" });
   }
