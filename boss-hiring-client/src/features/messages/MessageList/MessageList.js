@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -30,7 +30,9 @@ function MessageList({ setUnread }) {
     }
   }
 
-  setUnread(totalCnt); // call the callback function to change the badge
+  useEffect(() => {
+    setUnread(totalCnt); // call the callback function to change the badge
+  }, [setUnread, totalCnt]);
 
   // get user info corresponding to user_id
   const userInfoMap = useSelector((state) =>
