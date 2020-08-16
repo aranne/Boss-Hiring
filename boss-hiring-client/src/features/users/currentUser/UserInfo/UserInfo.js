@@ -6,7 +6,7 @@ import { Result, List, Button, Modal } from "antd-mobile";
 import { selectCurrentUser, logout } from "../currentUserSlice";
 import { usersReset } from "../../usersSlice";
 import { messageReset } from "../../../messages/messagesSlice";
-import { wsClient } from "../../../../web/webSocket";
+import io from 'socket.io-client';
 
 import "./UserInfo.less";
 
@@ -31,7 +31,8 @@ function UserInfo() {
           dispatch(logout()); // clear current user in redux
           dispatch(usersReset([]));
           dispatch(messageReset([]));
-          wsClient.close();
+          io.socket.close();
+          io.socket = undefined;
           history.push("/login");
           Cookies.remove("userId"); // clear cookie
         },

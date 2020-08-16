@@ -1,18 +1,17 @@
 const mongoose = require("mongoose");
 const User = require("./../models/user");
 const only = require("only");
-const notifyAll = require("../bin/webSocket").notifyAll;
+const notifyAll = require("../bin/socketio").notifyAll;
 
 exports.create = async (req, res) => {
   const user = new User(only(req.body, "username password type"));
   try {
     const newUser = await user.save();
     const data = only(newUser, "_id username type");
+    await notifyAll(newUser); // notify all clients of other type
 
     res.cookie("userId", newUser._id, { maxAge: 1000 * 60 * 60 * 24 });
     res.json({ user: data });
-    const type = data.type === "recruiter" ? "jobseeker" : "recruiter";
-    await notifyAll(type); // notify all clients for users
   } catch (err) {
     res.status(400).json({ message: "This user already exists" });
   }
@@ -47,9 +46,9 @@ exports.update = async (req, res) => {
       userUpdate
     );
     newUser.password = undefined; // remove password before send json
+    await notifyAll(newUser); // notify all clients for users
+
     res.json({ user: newUser });
-    const type = newUser.type === "recruiter" ? "jobseeker" : "recruiter";
-    await notifyAll(type); // notify all clients for users
   } catch (err) {
     res.clearCookie("userId"); // clear userId cookie
     res.status(400).json({ message: "Update Error" });

@@ -31,7 +31,7 @@ const usersSlice = createSlice({
     error: null,
   }),
   reducers: {
-    usersUpdated: usersAdapter.upsertMany,
+    userUpdated: usersAdapter.upsertOne,
     usersReset: usersAdapter.setAll,
   },
   extraReducers: {
@@ -66,7 +66,7 @@ const usersSlice = createSlice({
 
 export default usersSlice.reducer;
 
-export const { usersUpdated, usersReset } = usersSlice.actions;
+export const { userUpdated, usersReset } = usersSlice.actions;
 
 export const {
   selectAll: selectAllUsers,

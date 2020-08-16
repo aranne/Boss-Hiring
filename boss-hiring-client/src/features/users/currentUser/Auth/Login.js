@@ -3,16 +3,8 @@ import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login, selectLoadingStatus } from "./../currentUserSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
-import {
-  NavBar,
-  WingBlank,
-  List,
-  InputItem,
-  Button,
-  Toast,
-} from "antd-mobile";
+import { NavBar, WingBlank, List, InputItem, Button, Toast } from "antd-mobile";
 import Logo from "../../../../app/logo/logo";
-import registerWSClient from '../../../../web/webSocket';
 import "./auth.less";
 
 const ListItem = List.Item;
@@ -39,9 +31,6 @@ function Login() {
     if (login.fulfilled.match(resultAction)) {
       // succeed
       const user = unwrapResult(resultAction);
-      // build TCP connection between client and server for users list updated
-      registerWSClient(user.type);
-      // login page may be from 'redirect to=a from=b'
       const path = getRedirectPath(user);
       let { from } =
         path === "/"
@@ -75,7 +64,7 @@ function Login() {
     <div>
       <NavBar>BOSS HIRING</NavBar>
       <Logo />
-      <WingBlank className="login-list" size="lg">
+      <WingBlank className="login-list">
         <List>
           <ListItem>
             <InputItem

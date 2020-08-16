@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Route, Redirect, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { unwrapResult } from "@reduxjs/toolkit";
 import { Toast, ActivityIndicator } from "antd-mobile";
 import Cookies from "js-cookie";
 import {
@@ -9,7 +8,6 @@ import {
   fetchCurrentUser,
   selectPrepareStatus,
 } from "../features/users/currentUser/currentUserSlice";
-import registerWSClient from "../web/webSocket";
 import prepareLogin from "../features/users/currentUser/Auth/prepare";
 
 // A wrapper for <Route> that redirects to the login
@@ -29,10 +27,6 @@ export default function AuthenticateRoute({ children, ...rest }) {
       console.log("Fetching current user...");
       const resultAction = await dispatch(fetchCurrentUser());
       if (fetchCurrentUser.fulfilled.match(resultAction)) {
-        const newUser = unwrapResult(resultAction);
-
-        // if we fetch current logged in user, send its type to web socket Sever
-        registerWSClient(newUser);
       } else {
         if (resultAction.payload) {
           Toast.fail(resultAction.payload.message, 1.5);
@@ -52,7 +46,7 @@ export default function AuthenticateRoute({ children, ...rest }) {
     if (!prepareStatus && user) {
       prepareLogin(user);
     }
-  }, [prepareStatus, user])
+  }, [prepareStatus, user]);
 
   // stop rendering and wait for async result !!!!!!!
 

@@ -13,7 +13,6 @@ import {
 } from "antd-mobile";
 import { register, selectLoadingStatus } from "./../currentUserSlice";
 import Logo from "../../../../app/logo/logo";
-import registerWSClient from "../../../../web/webSocket";
 import "./auth.less";
 
 const ListItem = List.Item;
@@ -59,8 +58,6 @@ function Register() {
     if (register.fulfilled.match(resultAction)) {
       // succeed
       const user = unwrapResult(resultAction);
-      // build TCP connection between client and server for users list updated
-      registerWSClient(user.type);
       const path = getRedirectPath(user);
       let { from } =
         path === "/"
