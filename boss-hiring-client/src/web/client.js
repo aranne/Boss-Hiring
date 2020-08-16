@@ -9,14 +9,14 @@ const baseURL = serverConfig.url;
  * @param {Object} customConfig     costom config like params
  */
 export async function client(url, { body, ...customConfig } = {}) {
-  // const headers = { "Content-Type": "application/json" };
+  const headers = { "Content-Type": "application/x-www-form-urlencoded" };
 
   const config = {
     url: baseURL + url,
     method: body ? "POST" : "GET",
     ...customConfig,
     headers: {
-      // ...headers,
+      ...headers,
       ...customConfig.headers,
     },
     withCredentials: true, // CORS request should be made with credentials(cookies)
