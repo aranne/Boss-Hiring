@@ -2,6 +2,7 @@ import axios from "axios";
 import { serverConfig } from "../app/config";
 
 const baseURL = serverConfig.url;
+axios.defaults.withCredentials = true
 /**
  *
  * @param {String} url
@@ -9,7 +10,10 @@ const baseURL = serverConfig.url;
  * @param {Object} customConfig     costom config like params
  */
 export async function client(url, { body, ...customConfig } = {}) {
-  const headers = { "Content-Type": "application/json" };
+  const headers = {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  };
 
   const config = {
     url: baseURL + url,
