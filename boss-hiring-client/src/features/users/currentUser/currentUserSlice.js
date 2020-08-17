@@ -79,6 +79,7 @@ const currentUserSlice = createSlice({
   initialState: {
     currentUser: null,
     prepared: false,
+    isLoggedIn: false,
     loading: "idle",
     currentReqeustId: undefined,
     error: null,
@@ -87,6 +88,10 @@ const currentUserSlice = createSlice({
     logout: (state) => {
       state.currentUser = null;
       state.prepared = false;
+      state.isLoggedIn = false;
+    },
+    setLoginStatus: (state) => {
+      state.isLoggedIn = true;
     },
     prepared: (state, action) => {
       state.prepared = action.payload;
@@ -203,8 +208,9 @@ const currentUserSlice = createSlice({
 
 export default currentUserSlice.reducer;
 
-export const { logout, prepared } = currentUserSlice.actions;
+export const { logout, prepared, setLoginStatus } = currentUserSlice.actions;
 
 export const selectCurrentUser = (state) => state.currentUser.currentUser;
 export const selectLoadingStatus = (state) => state.currentUser.loading;
 export const selectPrepareStatus = (state) => state.currentUser.prepared;
+export const selectLoggedInStatus = (state) => state.currentUser.isLoggedIn;

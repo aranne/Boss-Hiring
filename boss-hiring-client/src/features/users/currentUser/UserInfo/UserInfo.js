@@ -1,7 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import Cookies from "js-cookie";
 import { Result, List, Button, Modal } from "antd-mobile";
 import { selectCurrentUser, logout } from "../currentUserSlice";
 import { usersReset } from "../../usersSlice";
@@ -34,7 +33,6 @@ function UserInfo() {
           io.socket.close();
           io.socket = undefined;
           history.push("/login");
-          Cookies.remove("userId"); // clear cookie
         },
       },
     ]);

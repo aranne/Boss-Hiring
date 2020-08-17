@@ -27,7 +27,6 @@ export async function client(url, { body, ...customConfig } = {}) {
   if (body) {
     config.data = body;
   }
-  axios.defaults.withCredentials = true
   return axios(config);
 }
 

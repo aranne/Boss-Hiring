@@ -11,9 +11,9 @@ exports.create = async (req, res) => {
     await notifyAll(newUser); // notify all clients of other type
     // secure for HTTPS, sameSite:None allows cookies sent
     res.cookie("userId", newUser._id, {
+      // path: "/",
       maxAge: 1000 * 60 * 60 * 24,
-      sameSite: "none",
-      secure: true,
+      // httpOnly: true,
     });
     res.json({ user: data });
   } catch (err) {
@@ -29,10 +29,9 @@ exports.login = async (req, res) => {
     await user.authenticate(password);
     user.password = undefined; // remove password before send json
     res.cookie("userId", user._id, {
-      path: "/",
+      // path: "/",
       maxAge: 1000 * 60 * 60 * 24,
-      sameSite: "none",
-      secure: true,
+      // httpOnly: true,
     });
     res.json({ user });
   } catch (err) {

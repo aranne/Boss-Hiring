@@ -24,7 +24,7 @@ app.use(function (req, res, next) {
   );
   res.header(
     "Access-Control-Allow-Headers",
-    "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept"
   );
   next();
 });
@@ -36,7 +36,7 @@ var corsOptions = {
   exposedHeaders: ["set-cookie"],
 };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
