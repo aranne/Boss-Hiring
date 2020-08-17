@@ -3,5 +3,5 @@ exports.dbConfig = {
 };
 
 exports.clientConfig = {
-  url: "https://aranne.github.io" || "http://localhost:3000",
+  url: process.env.CLIENT_URI || "http://localhost:3000",
 };

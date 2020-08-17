@@ -16,19 +16,24 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
 app.use(function (req, res, next) {
-  res.header("Content-Type", "application/json");
   res.header("Access-Control-Allow-Credentials", true);
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET,PUT,POST,DELETE,UPDATE,OPTIONS"
+  );
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept"
   );
   next();
 });
 // CORS options for sending cookies
 const clientUrl = require("./config").clientConfig.url;
 var corsOptions = {
-  origin: clientUrl,
+  origin: [clientUrl, "http://localhost:3000"],
   credentials: true,
+  exposedHeaders: ["set-cookie"],
 };
 
 app.use(cors(corsOptions));

@@ -29,6 +29,7 @@ exports.login = async (req, res) => {
     await user.authenticate(password);
     user.password = undefined; // remove password before send json
     res.cookie("userId", user._id, {
+      path: "/",
       maxAge: 1000 * 60 * 60 * 24,
       sameSite: "none",
       secure: true,

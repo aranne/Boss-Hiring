@@ -1,8 +1,7 @@
 import axios from "axios";
 import { serverConfig } from "../app/config";
 
-const baseURL = serverConfig.url;
-axios.defaults.withCredentials = true
+const baseURL = serverConfig.url; 
 /**
  *
  * @param {String} url
@@ -28,6 +27,7 @@ export async function client(url, { body, ...customConfig } = {}) {
   if (body) {
     config.data = body;
   }
+  axios.defaults.withCredentials = true
   return axios(config);
 }
 
