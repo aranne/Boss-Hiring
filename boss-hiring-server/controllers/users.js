@@ -13,6 +13,8 @@ exports.create = async (req, res) => {
     res.cookie("userId", newUser._id, {
       // path: "/",
       maxAge: 1000 * 60 * 60 * 24,
+      secure: true,
+      sameSite: "none",
       // httpOnly: true,
     });
     res.json({ user: data });
@@ -31,6 +33,8 @@ exports.login = async (req, res) => {
     res.cookie("userId", user._id, {
       // path: "/",
       maxAge: 1000 * 60 * 60 * 24,
+      secure: true,
+      sameSite: "none",
       // httpOnly: true,
     });
     res.json({ user });
