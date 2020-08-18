@@ -3,5 +3,5 @@ export const serverConfig = {
 };
 
 export const socketIOConfig = {
-  url: "ws://boss-hiring-app.herokuapp.com" || "ws://localhost:4000",
+  url: "wss://boss-hiring-app.herokuapp.com" || "ws://localhost:4000",
 };
