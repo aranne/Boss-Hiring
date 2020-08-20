@@ -10,16 +10,18 @@ Demo: [http://boss-hiring-client.herokuapp.com](http://boss-hiring-client.heroku
 
 ![App](https://user-images.githubusercontent.com/43511249/90716518-23efe300-e27b-11ea-8b62-1f308d5a37ee.png)
 
----
-
-#### Access:
+## Access:
 
 Username: Alex
 
 Password: 123
 
----
+Or you can create a new account
 
-#### LICENSE
+## Authors
+
+* Weiran Fu
+
+## LICENSE
 
 MIT License
