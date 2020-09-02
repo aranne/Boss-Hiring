@@ -20,10 +20,6 @@ Or you can create a new account
 
 ![App](https://user-images.githubusercontent.com/43511249/90716518-23efe300-e27b-11ea-8b62-1f308d5a37ee.png)
 
-## Authors
-
-* Weiran Fu
-
 ## LICENSE
 
 MIT License
