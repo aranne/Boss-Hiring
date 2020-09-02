@@ -1,18 +1,22 @@
-# Boss-Hiring
+# Boss Hiring App
 
-A small business social network App which supports direct chatting between recruiters and job seekers.
+Business social network App.
 
 > Frontend -> React, Redux and Ant Design Mobile UI
 
 > Backend -> Express.js, socket.IO and MongoDB
 
-Demo: [http://boss-hiring-client.herokuapp.com](http://boss-hiring-client.herokuapp.com)
+## Features
+- Recruiters/Job seekers signup and signin
+- Chat between recruiters and job seekers
 
 ## Access:
 
-Username: Alex
+[http://boss-hiring-client.herokuapp.com](http://boss-hiring-client.herokuapp.com)
 
-Password: 123
+> Username: Alex
+
+> Password: 123
 
 Or you can create a new account
 
