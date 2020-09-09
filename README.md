@@ -8,6 +8,8 @@ Business social network App.
 
 ## Features
 - Recruiters/Job seekers signup and signin
+- Post jobs and search jobs
+- Job board for recruiters and job seekers
 - Chat between recruiters and job seekers
 
 ## Access:
